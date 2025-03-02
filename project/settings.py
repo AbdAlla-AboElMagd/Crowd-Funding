@@ -124,3 +124,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR , 'static')]
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Chenging the default user to the Custom Created User
+AUTH_USER_MODEL = 'crowdFunding.User'
