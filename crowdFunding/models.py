@@ -36,6 +36,7 @@ class User(AbstractUser):
         validators=[egypt_phone_regex],
         verbose_name="Must be Egyption Number"
     )
+
     is_staff = models.BooleanField(default=False)
     Birthdate= models.DateField(null=True , blank=True)
     facebook_profile = models.URLField(max_length=255 , null=True , blank=True)
@@ -126,6 +127,7 @@ class ReportComment(models.Model):
     comment = models.ForeignKey(Comment , on_delete=models.CASCADE)
     def __str__(self):
         return f"{self.title}: {self.text}"
+
 
 class RatingProject(models.Model):
     id = models.AutoField(primary_key=True)
