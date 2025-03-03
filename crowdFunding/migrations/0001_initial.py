@@ -46,12 +46,12 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=False)),
                 ('profile_pic', models.ImageField(blank=True, null=True, upload_to='atachments/')),
                 ('phone', models.CharField(max_length=11, validators=[django.core.validators.RegexValidator(message='The Phone Number Must Be In The Format 01xxxxxxxx', regex='^01[0125][0-9]{8}$')], verbose_name='Must be Egyption Number')),
-                ('isAdmin', models.BooleanField(default=False)),
+
                 ('Birthdate', models.DateField(blank=True, null=True)),
                 ('facebook_profile', models.URLField(blank=True, max_length=255, null=True)),
                 ('country', models.CharField(blank=True, max_length=255, null=True)),
-                ('groups', models.ManyToManyField(related_name='crowdfunding_user_groups', to='auth.group')),
-                ('user_permissions', models.ManyToManyField(related_name='crowdfunding_user_permissions', to='auth.permission')),
+                ('groups', models.ManyToManyField(null=True, related_name='crowdfunding_user_groups', to='auth.group')),
+                ('user_permissions', models.ManyToManyField(null=True, related_name='crowdfunding_user_permissions', to='auth.permission')),
             ],
             options={
                 'verbose_name': 'user',
@@ -97,17 +97,19 @@ class Migration(migrations.Migration):
             name='ReportProject',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('title', models.CharField(max_length=255)),
                 ('text', models.TextField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('project_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crowdFunding.project')),
-                ('user_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crowdFunding.project')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
             name='ReprotComment',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('title', models.CharField(max_length=255)),
                 ('text', models.TextField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
