@@ -46,7 +46,6 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=False)),
                 ('profile_pic', models.ImageField(blank=True, null=True, upload_to='atachments/')),
                 ('phone', models.CharField(max_length=11, validators=[django.core.validators.RegexValidator(message='The Phone Number Must Be In The Format 01xxxxxxxx', regex='^01[0125][0-9]{8}$')], verbose_name='Must be Egyption Number')),
-
                 ('Birthdate', models.DateField(blank=True, null=True)),
                 ('facebook_profile', models.URLField(blank=True, max_length=255, null=True)),
                 ('country', models.CharField(blank=True, max_length=255, null=True)),
