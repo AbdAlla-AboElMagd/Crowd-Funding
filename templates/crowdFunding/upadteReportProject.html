@@ -1,0 +1,41 @@
+{% extends 'crowdFunding/home.html' %} {% load static %} {% block content %}
+<p class="fs-1 fw-bold text-center">Update Reprot Project</p>
+<div class="container">
+  {% if message and alert %} {% if alert == 'success' %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {% elif alert == 'danger' %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {% endif %} {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endif %}
+    <form
+      method="post"
+      action="{% url 'UpdateReportProject' report_id %}"
+      enctype="multipart/form-data"
+    >
+      {% csrf_token %} {% if error %}
+      <div class="alert alert-danger mb-2" role="alert">{{error}}</div>
+      {% endif %}
+
+      <div class="mb-3 text-center">{{ report_form.as_p }}</div>
+
+      <div class="col-auto text-center">
+        <button type="submit" class="btn btn-primary mb-3 w-50">Submit</button>
+      </div>
+    </form>
+    <div class="col-auto text-center">
+      <a
+        href="{% url 'DeleteReportProject' report_id %}"
+        class="btn btn-danger mb-3 w-50"
+        >Delete</a
+      >
+    </div>
+  </div>
+  {% endblock content %}
+</div>

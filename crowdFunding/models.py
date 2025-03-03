@@ -84,7 +84,11 @@ class Project(models.Model):
     target_price = models.IntegerField()
     tag_id = models.ForeignKey(Tag, on_delete= models.CASCADE , related_name='project_tag')
     user_id = models.ForeignKey(User , on_delete=models.PROTECT)
-
+    total_rating = models.FloatField(validators=[MinValueValidator(0,0) , MaxValueValidator(5.0)] , default=0.0)
+    total_user_rated = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return f"{self.title}"
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)
@@ -103,19 +107,25 @@ class Comment(models.Model):
 
 class ReportProject(models.Model):
     id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=255)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    user_id = models.ForeignKey(User , on_delete=models.CASCADE)
-    project_id = models.ForeignKey(Project , on_delete=models.CASCADE)
+    user = models.ForeignKey(User , on_delete=models.CASCADE)
+    project = models.ForeignKey(Project , on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.title}: {self.text}"
     
-class ReprotComment(models.Model):
+class ReportComment(models.Model):
     id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=255)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    user_id = models.ForeignKey(User , on_delete=models.CASCADE)
-    comment_id = models.ForeignKey(Comment , on_delete=models.CASCADE)
+    user = models.ForeignKey(User , on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment , on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.title}: {self.text}"
 
 class RatingProject(models.Model):
     id = models.AutoField(primary_key=True)
