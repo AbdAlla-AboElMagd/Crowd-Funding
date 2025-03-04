@@ -5,6 +5,8 @@ from django.core.validators import RegexValidator , MinLengthValidator , MaxLeng
 
 from django.contrib.auth.models import AbstractUser, Group, Permission
 
+from django.core.exceptions import ValidationError
+
 
 egypt_phone_regex = RegexValidator(
     regex=r'^01[0125][0-9]{8}$',
@@ -138,3 +140,27 @@ class RatingProject(models.Model):
 
     class Meta:
         unique_together = ('project_id', 'user_id')
+
+class SelectedProject(models.Model):
+    """
+    This Model For the Admin to Select Only 5 projects to show in the Home Page 
+    It Done by overriding the save method to check if the number of projects is less than 5 to save a new one
+    """
+    id = models.AutoField(primary_key=True)
+    project = models.OneToOneField(Project , on_delete=models.CASCADE , unique=True)
+
+
+    def clean(self):
+        if SelectedProject.objects.count() >= 5:
+            raise ValidationError("You can select only 5 projects.")
+
+    def save(self , *args , **kwargs):
+        self.clean()
+        if SelectedProject.objects.count() < 5:
+            super().save(*args , **kwargs)
+        else:
+            raise ValidationError("You can select only 5 projects")
+        
+    def __str__(self):
+        return f"{self.id}: {self.project}"
+    
