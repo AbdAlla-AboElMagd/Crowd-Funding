@@ -17,11 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from crowdFunding.views import about, home
+from crowdFunding import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('' , home , name ='home'),
-    path('home/' , home , name='home'),
-    path('about/' , about , name='about'),
+    path('' , views.home , name ='home'),
+    path('home/' , views.home , name='home'),
+    path('about/' , views.about , name='about'),
+    path('project/' , views.show_project , name='project'),
+    path('add_project/' , views.add_project , name='add_project'),
 ]

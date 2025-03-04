@@ -1,0 +1,41 @@
+{% extends 'CrowdFunding/home.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <a class="btn btn-danger" href="{% url 'add_project' %}">create project</a>
+    <h1 class="text-center mb-4">All Projects</h1>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for project in projects %}
+        <div class="col">
+            <div class="card h-100 shadow">
+        
+                {% if project.images.all %}
+                    <img src="{{ project.images.first.image.url }}" class="card-img-top" alt="{{ project.title }}">
+                {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-image fa-4x text-muted"></i>
+                    </div>
+                {% endif %}
+
+                
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.title }}</h5>
+                    
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>State:</strong> {{ project.state }}
+                        </li>
+                        
+                        <li class="list-group-item">
+                            <strong>Target Price:</strong> ${{ project.target_price }}
+                        </li>
+                    </ul>
+                </div>
+
+                
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+    {% endblock content %}

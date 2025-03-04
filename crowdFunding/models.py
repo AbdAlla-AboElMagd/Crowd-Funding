@@ -13,12 +13,7 @@ egypt_phone_regex = RegexValidator(
 
 # Create your models here.
 
-class Tag(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=200 , null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
 
 
 class User(AbstractUser):
@@ -70,21 +65,59 @@ class User(AbstractUser):
 
 #     def __str__(self):
 #         return f"{self.first_name} {self.last_name}" 
+#
+# projects
 
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    description = models.CharField(max_length=200, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+    
+class Category(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.name
+
+ 
 
 class Project(models.Model):
+
+    class StateChoices(models.TextChoices):
+        OPEN = "Open", "Open"
+        IN_PROGRESS = "In Progress", "In Progress"
+        DONE = "Done", "Done"
+        CANCELLED = "Cancelled", "Cancelled"
+
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     details = models.TextField()
-    state = models.CharField(max_length=10 , choices= [['Open' , 'Open'] , ['Done' , 'Done'] , ['Cancelled' , 'Cancelled']])
+    state = models.CharField(max_length=15, choices=StateChoices.choices, default=StateChoices.OPEN)
+   
     deadline = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    attachment = models.FileField(upload_to='atachments/' , blank=True , null=True)
     target_price = models.IntegerField()
-    tag_id = models.ForeignKey(Tag, on_delete= models.CASCADE , related_name='project_tag')
-    user_id = models.ForeignKey(User , on_delete=models.PROTECT)
+    tags = models.ManyToManyField(Tag, blank=True)
+    user = models.ForeignKey(User , on_delete=models.PROTECT, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
+   
 
+    def __str__(self):
+        return self.title
+
+
+class ProjectImage(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='project_images/')
+
+    def __str__(self):
+        return f"{self.project.title} Image"
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)

@@ -1,8 +1,9 @@
+
 from django.contrib import admin
 
 from django.contrib.auth.admin import UserAdmin
 
-from .models import User , Tag , Project , Comment , ReportProject , ReprotComment , RatingProject
+from .models import User , Tag , Project , Comment , ReportProject , ReprotComment , RatingProject, Category, ProjectImage
 
 # from django.contrib.auth.models import User as DefaultUser
 
@@ -43,6 +44,8 @@ admin.site.register(User, CustomUserAdmin)
 
 admin.site.register(Tag)
 admin.site.register(Project)
+admin.site.register(Category)
+admin.site.register(ProjectImage)
 admin.site.register(Comment)
 admin.site.register(ReportProject)
 admin.site.register(ReprotComment)
