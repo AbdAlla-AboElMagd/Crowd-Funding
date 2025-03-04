@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+<<<<<<< HEAD
 from crowdFunding import views
 
 urlpatterns = [
@@ -26,4 +27,28 @@ urlpatterns = [
     path('about/' , views.about , name='about'),
     path('project/' , views.show_project , name='project'),
     path('add_project/' , views.add_project , name='add_project'),
+=======
+from crowdFunding.views import CreateReportComment, CreateReportProject, DeleteReportComment, ListReportComment, ListReportProject, UpdateReportComment, UpdateReportProject, DeleteReportProject , about, home, searchProject
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('' , home , name ='home'),
+    path('home/' , home , name='home'),
+    path('about/' , about , name='about'),
+    # Report Project
+    path('reportProject/<int:project_id>' , CreateReportProject.as_view() , name='reportProject'),
+    path('updateReportProject/<int:report_id>' , UpdateReportProject.as_view() , name='UpdateReportProject'),
+    path('deleteReportProject/<int:report_id>' , DeleteReportProject.as_view() , name='DeleteReportProject'),
+    path('ListReportProject/' , ListReportProject.as_view() , name='ListReportProject'),
+    # Report Comment
+    path('reportComment/<int:comment_id>' , CreateReportComment.as_view() , name='reportComment'),
+    path('updateReportComment/<int:report_id>' , UpdateReportComment.as_view() , name='UpdateReportComment'),
+    path('deleteReportComment/<int:report_id>' , DeleteReportComment.as_view() , name='DeleteReportComment'),
+    path('ListReportComment/' , ListReportComment.as_view() , name='ListReportComment'),
+
+    # Search Urls
+    # path('searchProject/' , searchProject , name='searchProjectNoText'),
+    path('searchProject/' , searchProject , name='searchProject'),
+
+>>>>>>> main
 ]
