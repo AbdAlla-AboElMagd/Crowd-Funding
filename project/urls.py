@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from crowdFunding.views import CreateReportComment, CreateReportProject, DeleteReportComment, ListReportComment, ListReportProject, UpdateReportComment, UpdateReportProject, DeleteReportProject , about, home
+from crowdFunding.views import CreateReportComment, CreateReportProject, DeleteReportComment, ListReportComment, ListReportProject, UpdateReportComment, UpdateReportProject, DeleteReportProject , about, home, searchProject
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,6 +35,8 @@ urlpatterns = [
     path('deleteReportComment/<int:report_id>' , DeleteReportComment.as_view() , name='DeleteReportComment'),
     path('ListReportComment/' , ListReportComment.as_view() , name='ListReportComment'),
 
-
+    # Search Urls
+    # path('searchProject/' , searchProject , name='searchProjectNoText'),
+    path('searchProject/' , searchProject , name='searchProject'),
 
 ]

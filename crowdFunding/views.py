@@ -6,6 +6,8 @@ from django.views.generic import ListView
 from crowdFunding.forms import ReportCommentModelForm, ReportProjectModelForm
 from crowdFunding.models import Comment, Project, ReportProject , User , ReportComment
 
+from django.db import models
+
 # Create your views here.
 def home(request):
     return render(request=request, template_name='crowdFunding/home.html')
@@ -97,7 +99,7 @@ class CreateReportComment(View):
             context = {"report_form" : report_form , "comment_id" : comment_id  , "alert" : "success" , "message" : "Report Saved successfully"}
         else:
             context = {"report_form" : report_form , "comment_id" : comment_id  , "alert" : "danger" , "message" : "Failed To Save The Report"}
-            
+
         return render(request=request, template_name='crowdFunding/reportComment.html', context=context)
 
 
@@ -143,3 +145,22 @@ class ListReportComment(ListView):
     #     return super().dispatch(request, *args, **kwargs)
     
     
+class SearchProject(ListView):
+    model = Project
+    template_name = 'crowdFunding/searchProject.html'
+    context_object_name = 'projects'
+    queryset = Project.objects.filter(models.Q(title__icontains='search_text') | models.Q(details__icontains='search_text'))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+    
+def searchProject(request , search_text = None):
+    context = {}
+    if request.method == 'GET':
+        search_text = request.GET.get('search' , '')
+        if search_text:
+            print("search_text" , search_text)
+            context["search_text"] = search_text
+            projects = Project.objects.filter(models.Q(title__icontains=search_text) | models.Q(details__icontains=search_text))
+            context["projects"] = projects
+    return render (request=request , template_name='crowdFunding/searchProject.html' , context=context)
