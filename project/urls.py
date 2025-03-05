@@ -17,14 +17,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+<<<<<<< HEAD
 
 
 from crowdFunding.views import CreateReportComment, CreateReportProject, DeleteReportComment, ListReportComment, ListReportProject, UpdateReportComment, UpdateReportProject, DeleteReportProject , about, add_project, home, searchProject, show_project
+=======
+from crowdFunding.views import CreateReportComment, CreateReportProject, DeleteReportComment, ListReportComment, ListReportProject, UpdateReportComment, UpdateReportProject, DeleteReportProject , about, home, homepage, projectInCategory, searchProject
+from project import settings
+from django.conf.urls.static import static
+>>>>>>> main
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('' , home , name ='home'),
-    path('home/' , home , name='home'),
+    # path('home/' , home , name='home'),
     path('about/' , about , name='about'),
      path('project/' , show_project , name='project'),
     path('add_project/' , add_project , name='add_project'),
@@ -43,5 +49,16 @@ urlpatterns = [
     # path('searchProject/' , searchProject , name='searchProjectNoText'),
     path('searchProject/' , searchProject , name='searchProject'),
 
+<<<<<<< HEAD
+=======
+    #homepage
+    path('home/' , homepage , name='home'),
+
+    #Project In Category
+    path('category/<int:category_id>' , projectInCategory , name='category'),
+>>>>>>> main
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
