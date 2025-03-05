@@ -48,14 +48,14 @@ class ProjectImageForm(forms.ModelForm):
         model = ProjectImage
         fields = ['image']
         widgets = {
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}) # Single file input
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'})
         }
 
 ProjectImageFormSet = forms.modelformset_factory(
     ProjectImage,
     form=ProjectImageForm,
-    extra=3,  # Number of empty forms to display
-    can_delete=True  # Allow users to delete images
+    extra=3,  
+    can_delete=True 
 )
 
 

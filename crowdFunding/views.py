@@ -220,8 +220,6 @@ def searchProject(request , search_text = None):
             context["projects"] = projects
     return render (request=request , template_name='crowdFunding/searchProject.html' , context=context)
 
-<<<<<<< HEAD
-=======
 def homepage(request):
     highest_rating = Project.objects.filter(state = "Open").order_by("-total_rating")[:5]
     selected_projects = SelectedProject.objects.all()
@@ -237,4 +235,3 @@ def projectInCategory(request , category_id):
     projects = Project.objects.filter(category=category)
     context = {"projects" : projects , "category" : category}
     return render(request=request , template_name='crowdFunding/projectInCategory.html' , context=context)
->>>>>>> main

@@ -15,16 +15,12 @@ egypt_phone_regex = RegexValidator(
 
 # Create your models here.
 
-<<<<<<< HEAD
-
-=======
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200 , null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
->>>>>>> main
 
     def __str__(self):
         return f"{self.name}"
@@ -83,20 +79,8 @@ class User(AbstractUser):
 # projects
 
 
-class Tag(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    description = models.CharField(max_length=200, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.name
-    
-class Category(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-
-    def __str__(self):
-        return self.name
+ 
 
  
 
@@ -112,22 +96,24 @@ class Project(models.Model):
     title = models.CharField(max_length=255)
     details = models.TextField()
     state = models.CharField(max_length=15, choices=StateChoices.choices, default=StateChoices.OPEN)
-   
+    attachment = models.FileField(blank=True , null=True)
     deadline = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-<<<<<<< HEAD
     target_price = models.IntegerField()
 
-    tags = models.ManyToManyField(Tag, blank=True)
+   
     user = models.ForeignKey(User , on_delete=models.PROTECT, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
+    total_rating = models.FloatField(validators=[MinValueValidator(0,0) , MaxValueValidator(5.0)] , default=0.0)
+    total_user_rated = models.IntegerField(default=0)
    
 
     def __str__(self):
         return self.title
 
 
+    
 class ProjectImage(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='project_images/')
@@ -135,26 +121,12 @@ class ProjectImage(models.Model):
     def __str__(self):
         return f"{self.project.title} Image"
 
-    tag_id = models.ForeignKey(Tag, on_delete= models.CASCADE , related_name='project_tag')
-=======
-    attachment = models.FileField(blank=True , null=True)
-    target_price = models.IntegerField()
-    category = models.ForeignKey(Category, on_delete= models.CASCADE , related_name='projects' )
->>>>>>> main
-    user_id = models.ForeignKey(User , on_delete=models.PROTECT)
-    total_rating = models.FloatField(validators=[MinValueValidator(0,0) , MaxValueValidator(5.0)] , default=0.0)
-    total_user_rated = models.IntegerField(default=0)
-    
-    def __str__(self):
-        return f"{self.title}"
+   
 
-<<<<<<< HEAD
-=======
 class Tag(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     project = models.ForeignKey(Project , on_delete=models.CASCADE , related_name='tags')
->>>>>>> main
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)
