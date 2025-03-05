@@ -128,3 +128,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Chenging the default user to the Custom Created User
 AUTH_USER_MODEL = 'crowdFunding.User'
+
+# Media Path
+MEDIA_URL = 'attachments/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'attachments')

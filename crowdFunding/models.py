@@ -15,12 +15,15 @@ egypt_phone_regex = RegexValidator(
 
 # Create your models here.
 
-class Tag(models.Model):
+class Category(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200 , null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class User(AbstractUser):
@@ -82,15 +85,20 @@ class Project(models.Model):
     deadline = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    attachment = models.FileField(upload_to='atachments/' , blank=True , null=True)
+    attachment = models.FileField(blank=True , null=True)
     target_price = models.IntegerField()
-    tag_id = models.ForeignKey(Tag, on_delete= models.CASCADE , related_name='project_tag')
+    category = models.ForeignKey(Category, on_delete= models.CASCADE , related_name='projects' )
     user_id = models.ForeignKey(User , on_delete=models.PROTECT)
     total_rating = models.FloatField(validators=[MinValueValidator(0,0) , MaxValueValidator(5.0)] , default=0.0)
     total_user_rated = models.IntegerField(default=0)
     
     def __str__(self):
         return f"{self.title}"
+
+class Tag(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+    project = models.ForeignKey(Project , on_delete=models.CASCADE , related_name='tags')
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)
