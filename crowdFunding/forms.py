@@ -1,31 +1,40 @@
 from django import forms
-
 from .models import Project, ProjectImage, Tag
+
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = single_file_clean(data, initial)
+        return result
 
 class ProjectForm(forms.ModelForm):
     tags = forms.ModelMultipleChoiceField(
-    queryset=Tag.objects.all(),
-    widget=forms.CheckboxSelectMultiple,
-    required=False,
-    label="Tags"
-)
-    
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label="Tags"
+    )
+
     class Meta:
         model = Project
-        fields = '__all__'
-        fields = ['title', 'state', 'deadline', 'target_price','tags']
-       
+        fields = ['title', 'state', 'deadline', 'target_price', 'tags', 'details', 'attachment']
+
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control shadow-sm border-primary',
                 'placeholder': 'Enter the title',
                 'style': 'border-radius: 10px; border: 1px solid #586F6B; padding: 10px;'
             }),
-            # 'category': forms.TextInput(attrs={
-            #     'class': 'form-control shadow-sm border-primary',
-            #     'placeholder': 'Enter the category',
-            #     'style': 'border-radius: 10px; border: 1px solid #586F6B; padding: 10px;'
-            # }),
             'state': forms.Select(attrs={
                 'class': 'form-control bg-light',
                 'style': 'border-radius: 10px; border: 1px solid #586F6B; padding: 10px;'
@@ -40,23 +49,22 @@ class ProjectForm(forms.ModelForm):
                 'placeholder': 'Enter the target price',
                 'style': 'border-radius: 10px; border: 1px solid #586F6B; padding: 10px;'
             }),
+            'details': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter the details',
+            }),
+            'attachment': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Main Image'
+            }),
         }
-
 
 class ProjectImageForm(forms.ModelForm):
+    images = MultipleFileField(label='Additional Images', required=False)
+
     class Meta:
         model = ProjectImage
-        fields = ['image']
-        widgets = {
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control'})
-        }
-
-ProjectImageFormSet = forms.modelformset_factory(
-    ProjectImage,
-    form=ProjectImageForm,
-    extra=3,  
-    can_delete=True 
-)
+        fields = ['images']
 
 
 from crowdFunding.models import ReportProject , ReportComment
