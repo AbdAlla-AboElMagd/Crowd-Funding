@@ -1,8 +1,10 @@
+
 from django.contrib import admin
 
 from django.contrib.auth.admin import UserAdmin
 
 from .models import SelectedProject, User , Project , Comment , ReportProject , ReportComment , RatingProject , Category , Tag
+
 
 # from django.contrib.auth.models import User as DefaultUser
 

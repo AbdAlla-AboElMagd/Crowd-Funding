@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from crowdFunding.views import CreateReportComment, CreateReportProject, DeleteReportComment, ListReportComment, ListReportProject, UpdateReportComment, UpdateReportProject, DeleteReportProject , about, home, homepage, projectInCategory, searchProject
+from crowdFunding.views import CreateReportComment, CreateReportProject, DeleteReportComment, ListReportComment, ListReportProject, UpdateReportComment, UpdateReportProject, DeleteReportProject , about, add_project, home, homepage, projectInCategory, searchProject, show_project
 from project import settings
 from django.conf.urls.static import static
 
@@ -26,6 +26,8 @@ urlpatterns = [
     path('' , home , name ='home'),
     # path('home/' , home , name='home'),
     path('about/' , about , name='about'),
+     path('project/' , show_project , name='project'),
+    path('add_project/' , add_project , name='add_project'),
     # Report Project
     path('reportProject/<int:project_id>' , CreateReportProject.as_view() , name='reportProject'),
     path('updateReportProject/<int:report_id>' , UpdateReportProject.as_view() , name='UpdateReportProject'),

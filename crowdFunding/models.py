@@ -75,25 +75,53 @@ class User(AbstractUser):
 
 #     def __str__(self):
 #         return f"{self.first_name} {self.last_name}" 
+#
+# projects
 
+
+
+ 
+
+ 
 
 class Project(models.Model):
+
+    class StateChoices(models.TextChoices):
+        OPEN = "Open", "Open"
+        IN_PROGRESS = "In Progress", "In Progress"
+        DONE = "Done", "Done"
+        CANCELLED = "Cancelled", "Cancelled"
+
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     details = models.TextField()
-    state = models.CharField(max_length=10 , choices= [['Open' , 'Open'] , ['Done' , 'Done'] , ['Cancelled' , 'Cancelled']])
+    state = models.CharField(max_length=15, choices=StateChoices.choices, default=StateChoices.OPEN)
+    attachment = models.FileField(blank=True , null=True)
     deadline = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    attachment = models.FileField(blank=True , null=True)
     target_price = models.IntegerField()
-    category = models.ForeignKey(Category, on_delete= models.CASCADE , related_name='projects' )
-    user_id = models.ForeignKey(User , on_delete=models.PROTECT)
+
+   
+    user = models.ForeignKey(User , on_delete=models.PROTECT, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     total_rating = models.FloatField(validators=[MinValueValidator(0,0) , MaxValueValidator(5.0)] , default=0.0)
     total_user_rated = models.IntegerField(default=0)
-    
+   
+
     def __str__(self):
-        return f"{self.title}"
+        return self.title
+
+
+    
+class ProjectImage(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='project_images/')
+
+    def __str__(self):
+        return f"{self.project.title} Image"
+
+   
 
 class Tag(models.Model):
     id = models.AutoField(primary_key=True)
