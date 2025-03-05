@@ -1,5 +1,6 @@
 from django import forms
-<<<<<<< HEAD
+from .models import Project, ProjectImage, Tag
+
 from django.contrib.auth.forms import UserCreationForm
 from crowdFunding.models import User
 
@@ -16,8 +17,8 @@ class CustomUserCreationForm(UserCreationForm):
             'profile_pic':forms.FileInput(attrs={'class':'form-control'}),
             
         }
-=======
-from .models import Project, ProjectImage, Tag
+
+
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
