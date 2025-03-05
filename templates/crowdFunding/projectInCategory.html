@@ -1,47 +1,10 @@
 {% extends 'crowdFunding/home.html' %} {% load static %} {% block content %}
-<p class="fs-1 fw-bold text-center">Search</p>
+<p class="fs-1 fw-bold text-center">{{category.name}}</p>
+<p class="fs-4 text-center">{{category.description}}</p>
 <div class="container">
-  <form
-    method="GET"
-    action="{% url 'searchProject' %}"
-    enctype="multipart/form-data"
-  >
-    {% comment %} {% csrf_token %} {% endcomment %} {% if error %}
-    <div class="alert alert-danger mb-2" role="alert">{{error}}</div>
-    {% endif %}
-
-    <div class="mb-3 text-center">
-      <label for="search" class="form-label">Search</label>
-      {% if search_text %}
-      <input
-        type="search"
-        class="form-control"
-        id="search"
-        name="search"
-        placeholder="Search"
-        value="{{search_text}}"
-      />
-      {% else %}
-      <input
-        type="text"
-        class="form-control"
-        id="search"
-        name="search"
-        placeholder="Search"
-      />
-      {% endif %}
-    </div>
-    <div class="col-auto text-center">
-      <button type="submit" class="btn btn-primary mb-3 w-50">Search</button>
-    </div>
-  </form>
-
   <!-- Projects -->
-  <div>
+  <div class="m-3">
     {% if projects %}
-    <p class="fs-3 fw-bold text-center">
-      Found Results: {{ projects | length }}
-    </p>
     <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-evenly">
       {% for project in projects %}
       <div class="col h-100 d-flex">

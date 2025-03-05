@@ -4,7 +4,7 @@ from django.views import View
 from django.views.generic import ListView
 
 from crowdFunding.forms import ReportCommentModelForm, ReportProjectModelForm
-from crowdFunding.models import Comment, Project, ReportProject , User , ReportComment
+from crowdFunding.models import Comment, Project, ReportProject, SelectedProject , User , ReportComment , Category , Tag
 
 from django.db import models
 
@@ -145,14 +145,14 @@ class ListReportComment(ListView):
     #     return super().dispatch(request, *args, **kwargs)
     
     
-class SearchProject(ListView):
-    model = Project
-    template_name = 'crowdFunding/searchProject.html'
-    context_object_name = 'projects'
-    queryset = Project.objects.filter(models.Q(title__icontains='search_text') | models.Q(details__icontains='search_text'))
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+# class SearchProject(ListView):
+#     model = Project
+#     template_name = 'crowdFunding/searchProject.html'
+#     context_object_name = 'projects'
+#     queryset = Project.objects.filter(models.Q(title__icontains='search_text') | models.Q(details__icontains='search_text') | models.Q(tags__name__icontains='search_text')).order_by('id')
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         return context
     
 def searchProject(request , search_text = None):
     context = {}
@@ -161,6 +161,22 @@ def searchProject(request , search_text = None):
         if search_text:
             print("search_text" , search_text)
             context["search_text"] = search_text
-            projects = Project.objects.filter(models.Q(title__icontains=search_text) | models.Q(details__icontains=search_text))
+            projects = Project.objects.filter(models.Q(title__icontains=search_text) | models.Q(details__icontains=search_text) | models.Q(tags__name__icontains=search_text)).distinct().order_by('id')
             context["projects"] = projects
     return render (request=request , template_name='crowdFunding/searchProject.html' , context=context)
+
+def homepage(request):
+    highest_rating = Project.objects.filter(state = "Open").order_by("-total_rating")[:5]
+    selected_projects = SelectedProject.objects.all()
+    latest_projects = Project.objects.all().order_by("-created_at")[:5]
+    categories = Category.objects.all()
+
+    context = {"highest_rating" : highest_rating , "selected_projects" : selected_projects , "latest_projects" : latest_projects , "categories" : categories}
+
+    return render(request=request , template_name='crowdFunding/homepage.html' , context=context)
+
+def projectInCategory(request , category_id):
+    category = Category.objects.get(id=category_id)
+    projects = Project.objects.filter(category=category)
+    context = {"projects" : projects , "category" : category}
+    return render(request=request , template_name='crowdFunding/projectInCategory.html' , context=context)
