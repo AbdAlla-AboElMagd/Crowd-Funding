@@ -15,13 +15,25 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.shortcuts import render
 from django.urls import path
+from django.contrib.auth import views as auth_views  
+from crowdFunding.views import about, custom_login, custom_logout, home, signup ,activate
+from django.conf.urls import handler404 
+from crowdFunding.views import about, home, signup
 
-from crowdFunding.views import about, home
+def custom_page_not_found(request, exception):
+    return render(request, 'crowdFunding/404.html', status=404)
 
+handler404 = custom_page_not_found
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('' , home , name ='home'),
-    path('home/' , home , name='home'),
-    path('about/' , about , name='about'),
+    path('', home, name='home'),
+    path('home/', home, name='home'),
+    path('about/', about, name='about'),
+    path('signup/', signup, name='signup'),  
+    # path('login/', auth_views.LoginView.as_view(template_name='crowdFunding/login.html'), name='login'),
+     path('login/', custom_login, name='login'), 
+    path('logout/', custom_logout, name='logout'),  
+     path('activate/<uidb64>/<token>/', activate, name='activate'),
 ]

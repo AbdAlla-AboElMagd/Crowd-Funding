@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-d$_mwcsv_n%x*=bme6h75g!*ijlao1!$n26@#(v5w35-#4)0u1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
 
 
 # Application definition
@@ -87,20 +88,23 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+# AUTH_PASSWORD_VALIDATORS = [
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+#          'OPTIONS': {
+#             'min_length': 3, }
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+#     },
+# ]
+AUTH_PASSWORD_VALIDATORS = []
 
 
 # Internationalization
@@ -128,3 +132,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Chenging the default user to the Custom Created User
 AUTH_USER_MODEL = 'crowdFunding.User'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+LOGIN_REDIRECT_URL = 'home' 
+LOGOUT_REDIRECT_URL = 'login'
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST ='smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'drnasser.khairy@gmail.com'
+EMAIL_HOST_PASSWORD = '' #هنا هتحط الباسورد اللي هيديهولك الجيميل علشان تستخدمه
+# DEFAULT_FROM_EMAIL = 'drnasser.khairy@gmail.com'
+
+# # Image settings
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
+
+
+

@@ -1,45 +1,27 @@
 from django.contrib import admin
-
 from django.contrib.auth.admin import UserAdmin
-
-from .models import User , Tag , Project , Comment , ReportProject , ReprotComment , RatingProject
-
-# from django.contrib.auth.models import User as DefaultUser
-
-# # from .models import CustomUser
-
-# # UnRegister Default User
-# admin.site.unregister(DefaultUser)
-
+from .models import User, Tag, Project, Comment, ReportProject, ReprotComment, RatingProject
 
 # Custom UserAdmin class
+
+
 class CustomUserAdmin(UserAdmin):
-    # Fields to display in the list view
-    list_display = ('username', 'email', 'first_name', 'last_name', 'phone', 'Birthdate', 'is_active', 'is_staff')
-
-    # Fields to include in the add/edit forms
+    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_superuser')
+    search_fields = ('email', 'first_name', 'last_name')
+    ordering = ('email',)
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        ('Personal Info', {'fields': ('first_name', 'last_name', 'email', 'phone', 'Birthdate', 'facebook_profile', 'country', 'profile_pic')}),
+        (None, {'fields': ('email', 'password')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'phone', 'profile_pic')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
-
-    # Fields to include in the add form
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'phone', 'Birthdate', 'facebook_profile', 'country', 'profile_pic'),
+            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_superuser'),
         }),
     )
 
-
-
-# Register your models here.
-# admin.site.register(User , UserAdmin)
-
 admin.site.register(User, CustomUserAdmin)
-# admin.site.register(CustomUser)
 
 admin.site.register(Tag)
 admin.site.register(Project)
