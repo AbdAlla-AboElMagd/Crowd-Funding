@@ -105,7 +105,7 @@ class Project(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     target_price = models.IntegerField()
-<<<<<<< HEAD
+
     tags = models.ManyToManyField(Tag, blank=True)
     user = models.ForeignKey(User , on_delete=models.PROTECT, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
@@ -121,7 +121,7 @@ class ProjectImage(models.Model):
 
     def __str__(self):
         return f"{self.project.title} Image"
-=======
+
     tag_id = models.ForeignKey(Tag, on_delete= models.CASCADE , related_name='project_tag')
     user_id = models.ForeignKey(User , on_delete=models.PROTECT)
     total_rating = models.FloatField(validators=[MinValueValidator(0,0) , MaxValueValidator(5.0)] , default=0.0)
@@ -129,7 +129,7 @@ class ProjectImage(models.Model):
     
     def __str__(self):
         return f"{self.title}"
->>>>>>> main
+
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)

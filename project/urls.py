@@ -17,24 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-<<<<<<< HEAD
-from crowdFunding import views
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('' , views.home , name ='home'),
-    path('home/' , views.home , name='home'),
-    path('about/' , views.about , name='about'),
-    path('project/' , views.show_project , name='project'),
-    path('add_project/' , views.add_project , name='add_project'),
-=======
-from crowdFunding.views import CreateReportComment, CreateReportProject, DeleteReportComment, ListReportComment, ListReportProject, UpdateReportComment, UpdateReportProject, DeleteReportProject , about, home, searchProject
+
+from crowdFunding.views import CreateReportComment, CreateReportProject, DeleteReportComment, ListReportComment, ListReportProject, UpdateReportComment, UpdateReportProject, DeleteReportProject , about, add_project, home, searchProject, show_project
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('' , home , name ='home'),
     path('home/' , home , name='home'),
     path('about/' , about , name='about'),
+     path('project/' , show_project , name='project'),
+    path('add_project/' , add_project , name='add_project'),
     # Report Project
     path('reportProject/<int:project_id>' , CreateReportProject.as_view() , name='reportProject'),
     path('updateReportProject/<int:report_id>' , UpdateReportProject.as_view() , name='UpdateReportProject'),
@@ -50,5 +43,5 @@ urlpatterns = [
     # path('searchProject/' , searchProject , name='searchProjectNoText'),
     path('searchProject/' , searchProject , name='searchProject'),
 
->>>>>>> main
+
 ]

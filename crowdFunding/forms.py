@@ -1,5 +1,5 @@
 from django import forms
-<<<<<<< HEAD
+
 from .models import Project, ProjectImage, Tag
 
 class ProjectForm(forms.ModelForm):
@@ -57,7 +57,7 @@ ProjectImageFormSet = forms.modelformset_factory(
     extra=3,  # Number of empty forms to display
     can_delete=True  # Allow users to delete images
 )
-=======
+
 
 from crowdFunding.models import ReportProject , ReportComment
 
@@ -83,4 +83,4 @@ class ReportCommentModelForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Report Title', 'required': True}),
             'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter Report Description', 'required': True}),
         }
->>>>>>> main
+

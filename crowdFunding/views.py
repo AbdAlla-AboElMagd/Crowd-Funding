@@ -1,10 +1,10 @@
-<<<<<<< HEAD
+
 from django.shortcuts import redirect, render
 from .models import Project
 from .forms import ProjectForm, ProjectImageForm, ProjectImageFormSet
 from django.contrib import messages
 
-=======
+
 from django.shortcuts import render , redirect
 
 from django.views import View
@@ -14,7 +14,7 @@ from crowdFunding.forms import ReportCommentModelForm, ReportProjectModelForm
 from crowdFunding.models import Comment, Project, ReportProject , User , ReportComment
 
 from django.db import models
->>>>>>> main
+
 
 # Create your views here.
 def home(request):
@@ -23,7 +23,6 @@ def home(request):
 def about(request):
     return render(request=request, template_name='crowdFunding/about.html')
 
-<<<<<<< HEAD
 from django.shortcuts import render, redirect
 from .models import Project, ProjectImage
 from .forms import ProjectForm, ProjectImageForm
@@ -70,7 +69,7 @@ def add_project(request):
     })
 
 
-=======
+
 # Report Project CRUD Control
 class CreateReportProject(View):
     def get(self , request , project_id):
@@ -220,4 +219,4 @@ def searchProject(request , search_text = None):
             projects = Project.objects.filter(models.Q(title__icontains=search_text) | models.Q(details__icontains=search_text))
             context["projects"] = projects
     return render (request=request , template_name='crowdFunding/searchProject.html' , context=context)
->>>>>>> main
+
