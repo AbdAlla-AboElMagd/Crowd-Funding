@@ -1,7 +1,7 @@
 
 from django.shortcuts import redirect, render
 from .models import Project
-from .forms import ProjectForm, ProjectImageForm, ProjectImageFormSet
+from .forms import ProjectForm, ProjectImageForm
 from django.contrib import messages
 
 
@@ -34,41 +34,39 @@ def show_project(request):
 
 
 def add_project(request):
-    picture_form = ProjectImageForm()
     if request.method == 'POST':
         project_form = ProjectForm(request.POST, request.FILES)
-        image_formset = ProjectImageFormSet(request.POST, request.FILES, queryset=ProjectImage.objects.none())
+        image_form = ProjectImageForm(request.POST, request.FILES)
 
-
-        if project_form.is_valid() and image_formset.is_valid():
-
+        if project_form.is_valid() and image_form.is_valid():
+            # Save the project
             project = project_form.save(commit=False)
-            project.user = request.user
+            project.user = request.user 
             project.save()
-            project_form.save_m2m()
+            project_form.save_m2m()  
 
-            for form in image_formset:
-                if form.cleaned_data.get('image'):
-                    image = form.save(commit=False)
-                    image.project = project
-                    image.save()
+            # Handle the main image (attachment)
+            if 'attachment' in request.FILES:
+                project.attachment = request.FILES['attachment']
+                project.save()
 
+            # Handle multiple images
+            images = request.FILES.getlist('images')
+            for image in images:
+                ProjectImage.objects.create(project=project, image=image)
 
             messages.success(request, "Project created successfully!")
-            return redirect('show_project') 
+            return redirect('project')
         else:
             messages.error(request, "There were errors in the form. Please correct them.")
-    
     else:
         project_form = ProjectForm()
-        image_formset = ProjectImageFormSet(queryset=ProjectImage.objects.none())  
+        image_form = ProjectImageForm()
 
     return render(request, 'crowdFunding/add_project.html', {
         'project_form': project_form,
-        'image_formset': image_formset,
+        'image_form': image_form,
     })
-
-
 
 # Report Project CRUD Control
 class CreateReportProject(View):
