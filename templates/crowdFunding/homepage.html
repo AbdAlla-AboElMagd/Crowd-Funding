@@ -1,0 +1,192 @@
+{% extends 'crowdFunding/home.html' %} {% load static %} {% block content %}
+<div class="container">
+  <p class="fs-1 fw-bold text-center">Crowd Funding</p>
+  <p class="fs-1 text-center">Django Project</p>
+  <p class="text-center">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla
+    auctor, vestibulum magna sed, convallis ex. Cum sociis nato que penatibus et
+    magnis dis parturient montes, nascetur ridiculus mus.
+  </p>
+
+  <!-- Slider For the top 5 Projects Rate  -->
+  {% if highest_rating %}
+  <p class="fs-3 fw-bold text-center">Top Rating</p>
+  <div id="carouselTopRated" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      {% for project in highest_rating %}
+      <button
+        type="button"
+        data-bs-target="#carouselTopRated"
+        data-bs-slide-to="{{ forloop.counter0 }}"
+        class="{% if forloop.first %} active {% endif %}"
+        aria-current="true"
+        aria-label="Slide {{ forloop.counter1 }}"
+      ></button>
+      {% endfor %}
+    </div>
+    <div class="carousel-inner">
+      {% for project in highest_rating %}
+      <div class="carousel-item {% if forloop.first %} active {% endif %}">
+        <img
+          src="{{ project.attachment.url }}"
+          alt="{{ project.attachment.name }}"
+          class="d-block w-100"
+          style="
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            aspect-ratio: 16/9;
+          "
+        />
+        <div
+          class="carousel-caption d-none d-md-block"
+          style="background-color: rgba(0, 0, 0, 0.5)"
+        >
+          <p
+            class="fs-5 fw-bold"
+            style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8)"
+          >
+            {{ project.title }}
+          </p>
+          <p class="fs-6" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8)">
+            <i
+              class="bi bi-star-fill"
+              style="color: rgba(243, 207, 0, 0.88)"
+            ></i>
+            {{ project.total_rating }} {{ project.details }}
+          </p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselTopRated"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carouselTopRated"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  {% endif %}
+  <!-- End of the Slider -->
+
+  <!-- Admin Recommended project -->
+  <div class="m-4">
+    {% if selected_projects %}
+    <p class="fs-3 fw-bold text-center">We Hiegly Recommend:</p>
+    <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-evenly">
+      {% for project in selected_projects %}
+      <div class="col">
+        <div class="card w-100">
+          {% if project.project.attachment %}
+          <img
+            src="{{ project.project.attachment.url }}"
+            alt="{{ project.project.attachment.name }}"
+            style="
+              width: 100%;
+              height: auto;
+              object-fit: cover;
+              aspect-ratio: 16/9;
+            "
+          />
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ project.project.title }}</h5>
+            <p
+              class="card-text"
+              style="
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+            >
+              {{ project.project.details }}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  <!-- End of Admin Recomendation -->
+  <!-- Latest Project -->
+  <div>
+    {% if latest_projects %}
+    <p class="fs-3 fw-bold text-center">Latest Projects</p>
+    <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-evenly">
+      {% for project in latest_projects %}
+      <div class="col h-100 d-flex">
+        <div class="card w-100 d-flex flex-column">
+          {% if project.attachment %}
+          <img
+            src="{{ project.attachment.url }}"
+            alt="{{ project.attachment.name }}"
+            style="
+              width: 100%;
+              height: auto;
+              object-fit: cover;
+              aspect-ratio: 16/9;
+            "
+          />
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ project.title }}</h5>
+            <p
+              class="card-text"
+              style="
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+            >
+              {{ project.details }}
+            </p>
+            <p class="secondary mt-auto">{{ project.created_at }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  <!-- End Of Latest Project -->
+
+  <!-- Categories -->
+  <div class="m-3">
+    {% if categories %}
+    <p class="fs-3 fw-bold text-center">Categories</p>
+    <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-evenly">
+      {% for category in categories %}
+      <div class="col">
+        <a
+          href="{% url 'category' category.id %}"
+          style="text-decoration: none"
+        >
+          <div class="card w-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ category.name }}</h5>
+              <p class="card-text">{{ category.description }}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  <!-- End Of Categories -->
+ 
+</div>
+{% endblock content %}

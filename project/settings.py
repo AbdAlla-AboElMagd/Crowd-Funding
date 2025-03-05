@@ -153,3 +153,8 @@ EMAIL_HOST_PASSWORD = '' #هنا هتحط الباسورد اللي هيديهو
 
 
 
+
+
+# Media Path
+MEDIA_URL = 'attachments/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'attachments')

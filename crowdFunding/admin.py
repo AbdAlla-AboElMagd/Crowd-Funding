@@ -1,6 +1,18 @@
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Tag, Project, Comment, ReportProject, ReprotComment, RatingProject
+
+from .models import  User, Tag, Project, Comment, ReportProject, ReprotComment, RatingProject, SelectedProject, User , Project , Comment , ReportProject , ReportComment , RatingProject , Category , Tag
+
+
+# from django.contrib.auth.models import User as DefaultUser
+
+# # from .models import CustomUser
+
+# # UnRegister Default User
+# admin.site.unregister(DefaultUser)
+
+
 
 # Custom UserAdmin class
 
@@ -23,9 +35,11 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(User, CustomUserAdmin)
 
-admin.site.register(Tag)
+admin.site.register(Category)
 admin.site.register(Project)
+admin.site.register(Tag)
 admin.site.register(Comment)
 admin.site.register(ReportProject)
-admin.site.register(ReprotComment)
+admin.site.register(ReportComment)
 admin.site.register(RatingProject)
+admin.site.register(SelectedProject)

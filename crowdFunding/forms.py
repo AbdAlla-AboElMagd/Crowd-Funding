@@ -1,4 +1,5 @@
 from django import forms
+<<<<<<< HEAD
 from django.contrib.auth.forms import UserCreationForm
 from crowdFunding.models import User
 
@@ -15,3 +16,98 @@ class CustomUserCreationForm(UserCreationForm):
             'profile_pic':forms.FileInput(attrs={'class':'form-control'}),
             
         }
+=======
+from .models import Project, ProjectImage, Tag
+
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = single_file_clean(data, initial)
+        return result
+
+class ProjectForm(forms.ModelForm):
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label="Tags"
+    )
+
+    class Meta:
+        model = Project
+        fields = ['title', 'state', 'deadline', 'target_price', 'tags', 'details', 'attachment']
+
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control shadow-sm border-primary',
+                'placeholder': 'Enter the title',
+                'style': 'border-radius: 10px; border: 1px solid #586F6B; padding: 10px;'
+            }),
+            'state': forms.Select(attrs={
+                'class': 'form-control bg-light',
+                'style': 'border-radius: 10px; border: 1px solid #586F6B; padding: 10px;'
+            }),
+            'deadline': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type': 'date',
+                'style': 'border-radius: 10px; border: 1px solid #586F6B; padding: 10px;'
+            }),
+            'target_price': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter the target price',
+                'style': 'border-radius: 10px; border: 1px solid #586F6B; padding: 10px;'
+            }),
+            'details': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter the details',
+            }),
+            'attachment': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Main Image'
+            }),
+        }
+
+class ProjectImageForm(forms.ModelForm):
+    images = MultipleFileField(label='Additional Images', required=False)
+
+    class Meta:
+        model = ProjectImage
+        fields = ['images']
+
+
+from crowdFunding.models import ReportProject , ReportComment
+
+class userForm(forms.Form):
+    username = forms.CharField(max_length=25 , widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Username'}) ) 
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Password'}))
+
+class ReportProjectModelForm(forms.ModelForm):
+    class Meta:
+        model = ReportProject
+        fields = "__all__"
+        exclude= ['id' , 'created_at' , 'updated_at' , 'user' , 'project']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Report Title' , 'required': True}),
+            'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter Report Description', 'required': True}),
+        }
+class ReportCommentModelForm(forms.ModelForm):
+    class Meta:
+        model = ReportComment
+        fields = "__all__"
+        exclude= ['id' , 'created_at' , 'updated_at' , 'user' , 'comment']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Report Title', 'required': True}),
+            'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter Report Description', 'required': True}),
+        }
+
+>>>>>>> 0bdfcff574c6c6434980a29b304e9fde1af8ebbe
