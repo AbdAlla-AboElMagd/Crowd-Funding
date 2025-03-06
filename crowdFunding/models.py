@@ -36,7 +36,7 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)
-    profile_pic = models.ImageField(upload_to='atachments/', blank=True, null=True)
+    profile_pic = models.ImageField(blank=True, null=True)
     phone = models.CharField(
         max_length=11,
         validators=[egypt_phone_regex],
@@ -61,6 +61,7 @@ class User(AbstractUser):
  
 
  
+
 
 class Project(models.Model):
 
