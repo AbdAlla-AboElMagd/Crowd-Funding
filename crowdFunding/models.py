@@ -82,7 +82,9 @@ class Project(models.Model):
     target_price = models.IntegerField()
 
    
-    user = models.ForeignKey(User , on_delete=models.PROTECT, null=True)
+    # user = models.ForeignKey(User , on_delete=models.PROTECT, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     total_rating = models.FloatField(validators=[MinValueValidator(0,0) , MaxValueValidator(5.0)] , default=0.0)
     total_user_rated = models.IntegerField(default=0)
@@ -179,3 +181,12 @@ class SelectedProject(models.Model):
     def __str__(self):
         return f"{self.id}: {self.project}"
     
+class Donation(models.Model):
+    id = models.AutoField(primary_key=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(1)])
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='donations')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='donations')
+
+    def __str__(self):
+        return f"Donation of {self.amount} by {self.user.username} to {self.project.title}"
