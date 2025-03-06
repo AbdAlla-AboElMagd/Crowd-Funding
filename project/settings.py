@@ -148,9 +148,13 @@ EMAIL_HOST_PASSWORD = 'rpfm orjq ucqf gjrq' #هنا هتحط الباسورد ا
 # DEFAULT_FROM_EMAIL = 'drnasser.khairy@gmail.com'
 
 
-LOGIN_URL = '/login/'
+
 
 
 # Media Path
-MEDIA_URL = 'attachments/'
+MEDIA_URL = '/attachments/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'attachments')
+
+
+FILE_UPLOAD_TEMP_DIR = os.path.join(BASE_DIR, 'tmp')
+

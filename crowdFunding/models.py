@@ -82,7 +82,9 @@ class Project(models.Model):
     target_price = models.IntegerField()
 
    
-    user = models.ForeignKey(User , on_delete=models.PROTECT, null=True)
+    # user = models.ForeignKey(User , on_delete=models.PROTECT, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     total_rating = models.FloatField(validators=[MinValueValidator(0,0) , MaxValueValidator(5.0)] , default=0.0)
     total_user_rated = models.IntegerField(default=0)

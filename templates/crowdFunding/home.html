@@ -46,20 +46,30 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'ListReportComment' %}">Comments Reports</a>
           </li>
-           
+             {% if username %}
             <li><a class="nav-link" href="{% url 'profile' %}" class="text-light mb-2 text-decoration-none">profile</a></li>
-           
+             {% endif %}
         </ul>
         <form class="d-flex" role="search" method="GET" action="{% url 'searchProject' %}">
           <input class="form-control me-2" id="search" name="search" type="search" placeholder="Search"
             aria-label="Search" />
-          <button class="btn btn-outline-success" type="submit">
+          <button class="btn btn-outline-success me-2" type="submit">
             Search
           </button>
           
         </form>
-        <li><a class="btn btn-danger ms-1" href="{% url 'logout' %}" class="text-light mb-2 text-decoration-none">Logout</a></li>
-
+       
+        {% if username %}
+        <div class="d-flex">
+          <p class="text-white m-2">{{ username }}</p>
+          <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
+        </div>
+        {% else %}
+        <div class="d-flex">
+          <a class="btn btn-primary me-2" href="{% url 'login' %}">Login</a>
+          <a class="btn btn-success" href="{% url 'signup' %}">Register</a>
+        </div>
+        {% endif %}
         </ul>
 
       </div>
