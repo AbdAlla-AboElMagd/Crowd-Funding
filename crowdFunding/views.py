@@ -127,81 +127,105 @@ def show_project(request):
     return render(request, 'crowdFunding/project.html', {'projects': projects})
 
 def add_project(request):
-    if request.method == 'POST':
-        project_form = ProjectForm(request.POST, request.FILES)
-        image_form = ProjectImageForm(request.POST, request.FILES)
+    if request.session.get('username'):
+        username = request.session.get('username')
+        if request.method == 'POST':
+            project_form = ProjectForm(request.POST, request.FILES)
+            image_form = ProjectImageForm(request.POST, request.FILES)
 
-        if project_form.is_valid() and image_form.is_valid():
-            # Save the project
-            project = project_form.save(commit=False)
-            project.user = request.user 
-            project.save()
-            project_form.save_m2m()  
-
-            # Handle the main image (attachment)
-            if 'attachment' in request.FILES:
-                project.attachment = request.FILES['attachment']
+            if project_form.is_valid() and image_form.is_valid():
+                # Save the project
+                project = project_form.save(commit=False)
+                project.user = User.objects.get(username=username)
                 project.save()
+                project_form.save_m2m()  
 
-            # Handle multiple images
-            images = request.FILES.getlist('images')
-            for image in images:
-                ProjectImage.objects.create(project=project, image=image)
+                # Handle the main image (attachment)
+                if 'attachment' in request.FILES:
+                    project.attachment = request.FILES['attachment']
+                    project.save()
 
-            messages.success(request, "Project created successfully!")
-            return redirect('project')
+                # Handle multiple images
+                images = request.FILES.getlist('images')
+                for image in images:
+                    ProjectImage.objects.create(project=project, image=image)
+
+                messages.success(request, "Project created successfully!")
+                return redirect('project')
+            else:
+                messages.error(request, "There were errors in the form. Please correct them.")
         else:
-            messages.error(request, "There were errors in the form. Please correct them.")
+            project_form = ProjectForm()
+            image_form = ProjectImageForm()
+
+        return render(request, 'crowdFunding/add_project.html', {
+            'project_form': project_form,
+            'image_form': image_form,
+        })
     else:
-        project_form = ProjectForm()
-        image_form = ProjectImageForm()
-
-    return render(request, 'crowdFunding/add_project.html', {
-        'project_form': project_form,
-        'image_form': image_form,
-    })
-
+        return redirect('login')
 # Report Project CRUD Control
 class CreateReportProject(View):
     def get(self , request , project_id):
-        report_form = ReportProjectModelForm()
-        context = {"report_form" : report_form , "project_id" : project_id}
-        print( "Project_id :" , project_id)
-        return render(request=request, template_name='crowdFunding/reportProject.html', context=context)
+        if request.session.get('username'):
+            username = request.session.get('username')
+            report_form = ReportProjectModelForm()
+            context = {"report_form" : report_form , "project_id" : project_id}
+            print( "Project_id :" , project_id)
+            return render(request=request, template_name='crowdFunding/reportProject.html', context=context)
+        else:
+            return redirect('login')
     
     def post(self , request , project_id):
-        report_form = ReportProjectModelForm(request.POST)
+        if request.session.get('username'):
+            username = request.session.get('username')
+            report_form = ReportProjectModelForm(request.POST)
 
-        if report_form.is_valid():
-            print("title" , report_form.data['title'] )
-            print( "Project_id :" , project_id)
-            user = User.objects.get(id=1)
-            project = Project.objects.get(id=project_id)
-            report = ReportProject.objects.create(title = report_form.data['title'] , text=report_form.data['text'] , project = project , user = user)
-            context = {"report_form" : report_form , "project_id" : project_id , "alert" : "success" , "message" : "Report Saved successfully"}
-        else :
-            context = {"report_form" : report_form , "project_id" : project_id , "alert" : "danger" , "message" : "Failed To Report Report"}
-        return render(request=request, template_name='crowdFunding/reportProject.html', context=context)
-
+            if report_form.is_valid():
+                print("title" , report_form.data['title'] )
+                print( "Project_id :" , project_id)
+                user = User.objects.get(username=username)
+                project = Project.objects.get(id=project_id)
+                report = ReportProject.objects.create(title = report_form.data['title'] , text=report_form.data['text'] , project = project , user = user)
+                context = {"report_form" : report_form , "project_id" : project_id , "alert" : "success" , "message" : "Report Saved successfully"}
+            else :
+                context = {"report_form" : report_form , "project_id" : project_id , "alert" : "danger" , "message" : "Failed To Report Report"}
+            return render(request=request, template_name='crowdFunding/reportProject.html', context=context)
+        else:
+            return redirect('login')
 
 class UpdateReportProject(View):
-    def get(self , request , report_id):
-        report = ReportProject.objects.get(id = report_id)
-        report_form = ReportProjectModelForm(instance=report)
-        context = {"report_form" : report_form , "report_id" : report_id}
-        return render(request=request, template_name='crowdFunding/upadteReportProject.html', context=context)
     
-    def post(self , request , report_id):
-        report = ReportProject.objects.get(id = report_id)
-        report_form = ReportProjectModelForm(request.POST , instance=report)
-        if report_form.is_valid():
-            report_form.save()
-            context = {"report_form" : report_form , "report_id" : report_id , "alert" : "success" , "message" : "Report updated successfully"}
-
+    def get(self , request , report_id):
+        if request.session.get('username'):
+            username = request.session.get('username')
+            report = ReportProject.objects.get(id = report_id)
+            report_form = ReportProjectModelForm(instance=report)
+            context = {"report_form" : report_form , "report_id" : report_id}
             return render(request=request, template_name='crowdFunding/upadteReportProject.html', context=context)
         else:
-            context = {"report_form" : report_form , "report_id" : report_id , "alert" : "danger" , "message" : "Failed To Update The Report"}
-            return render(request=request, template_name='crowdFunding/upadteReportProject.html', context=context)
+            return redirect('login')
+    
+    def post(self , request , report_id):
+        if request.session.get('username'):
+            username = request.session.get('username')
+            user = User.objects.get(username=username)
+
+            report = ReportProject.objects.get(id = report_id)
+            if report.user == user:
+                report_form = ReportProjectModelForm(request.POST , instance=report)
+                if report_form.is_valid():
+                    report_form.save()
+                    context = {"report_form" : report_form , "report_id" : report_id , "alert" : "success" , "message" : "Report updated successfully"}
+
+                    return render(request=request, template_name='crowdFunding/upadteReportProject.html', context=context)
+                else:
+                    context = {"report_form" : report_form , "report_id" : report_id , "alert" : "danger" , "message" : "Failed To Update The Report"}
+                    return render(request=request, template_name='crowdFunding/upadteReportProject.html', context=context)
+            else:
+                return redirect('Home')
+        else:
+            return redirect('login')
 
 class DeleteReportProject(View):
     def get(self , request , report_id):
@@ -228,45 +252,70 @@ class ListReportProject(ListView):
 # Report Comment CRUD Control
 class CreateReportComment(View):
     def get(self , request , comment_id):
-        report_form = ReportCommentModelForm()
-        context = {"report_form" : report_form , "comment_id" : comment_id}
-        # print( "comment_id :" , comment_id)
-        return render(request=request, template_name='crowdFunding/reportComment.html', context=context)
+        if request.session.get('username'):
+            user = User.objects.get(username=username)
+            report_form = ReportCommentModelForm()
+            context = {"report_form" : report_form , "comment_id" : comment_id}
+            # print( "comment_id :" , comment_id)
+            return render(request=request, template_name='crowdFunding/reportComment.html', context=context)
+        else:
+            return redirect('login')
     
     def post(self , request , comment_id):
-        report_form = ReportProjectModelForm(request.POST)
+        if request.session.get('username'):
+            username = request.session.get('username')
+            
+            report_form = ReportProjectModelForm(request.POST)
 
-        if report_form.is_valid():
-            print("title" , report_form.data['title'] )
-            print( "comment_id :" , comment_id)
-            user = User.objects.get(id=1)
-            comment = Comment.objects.get(id=comment_id)
-            report = ReportComment.objects.create(title = report_form.data['title'] , text=report_form.data['text'] , comment = comment , user = user)       
-            context = {"report_form" : report_form , "comment_id" : comment_id  , "alert" : "success" , "message" : "Report Saved successfully"}
-        else:
-            context = {"report_form" : report_form , "comment_id" : comment_id  , "alert" : "danger" , "message" : "Failed To Save The Report"}
+            if report_form.is_valid():
+                print("title" , report_form.data['title'] )
+                print( "comment_id :" , comment_id)
+                user = User.objects.get(username=username)
+                comment = Comment.objects.get(id=comment_id)
+                report = ReportComment.objects.create(title = report_form.data['title'] , text=report_form.data['text'] , comment = comment , user = user)       
+                context = {"report_form" : report_form , "comment_id" : comment_id  , "alert" : "success" , "message" : "Report Saved successfully"}
+            else:
+                context = {"report_form" : report_form , "comment_id" : comment_id  , "alert" : "danger" , "message" : "Failed To Save The Report"}
 
-        return render(request=request, template_name='crowdFunding/reportComment.html', context=context)
+            return render(request=request, template_name='crowdFunding/reportComment.html', context=context)
+        else :
+            return redirect('login')
 
 
 class UpdateReportComment(View):
     def get(self , request , report_id):
-        report = ReportComment.objects.get(id = report_id)
-        report_form = ReportCommentModelForm(instance=report)
-        context = {"report_form" : report_form , "report_id" : report_id}
-        return render(request=request, template_name='crowdFunding/upadteReportComment.html', context=context)
+        if request.session.get('username'):
+            username = request.session.get('username')
+            user = User.objects.get(username=username)
+            report = ReportComment.objects.get(id = report_id)
+            if report.user == user :
+                report_form = ReportCommentModelForm(instance=report)
+                context = {"report_form" : report_form , "report_id" : report_id}
+                return render(request=request, template_name='crowdFunding/upadteReportComment.html', context=context)
+            else :
+                redirect('home')
+        else:
+            return redirect('login')
     
     def post(self , request , report_id):
-        report = ReportComment.objects.get(id = report_id)
-        report_form = ReportCommentModelForm(request.POST , instance=report)
-        if report_form.is_valid():
-            report_form.save()
-            context = {"report_form" : report_form , "report_id" : report_id , "alert" : "success" , "message" : "Report updated successfully"}
+        if request.session.get('username'):
+            username = request.session.get('username')
+            user = User.objects.get(username=username)
+            report = ReportComment.objects.get(id = report_id)
+            if report.user == user :
+                report_form = ReportCommentModelForm(request.POST , instance=report)
+                if report_form.is_valid():
+                    report_form.save()
+                    context = {"report_form" : report_form , "report_id" : report_id , "alert" : "success" , "message" : "Report updated successfully"}
 
-            return render(request=request, template_name='crowdFunding/upadteReportComment.html', context=context)
+                    return render(request=request, template_name='crowdFunding/upadteReportComment.html', context=context)
+                else:
+                    context = {"report_form" : report_form , "report_id" : report_id , "alert" : "danger" , "message" : "Failed To Update The Report"}
+                    return render(request=request, template_name='crowdFunding/upadteReportComment.html', context=context)
+            else :
+                return redirect('home')
         else:
-            context = {"report_form" : report_form , "report_id" : report_id , "alert" : "danger" , "message" : "Failed To Update The Report"}
-            return render(request=request, template_name='crowdFunding/upadteReportComment.html', context=context)
+            return redirect('login')
 
 class DeleteReportComment(View):
     def get(self , request , report_id):
