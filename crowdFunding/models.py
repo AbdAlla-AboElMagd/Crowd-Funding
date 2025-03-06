@@ -103,6 +103,9 @@ class Tag(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     project = models.ForeignKey(Project , on_delete=models.CASCADE , related_name='tags')
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)

@@ -53,7 +53,7 @@ class ProjectForm(forms.ModelForm):
 
     class Meta:
         model = Project
-        fields = ['title', 'state', 'deadline', 'target_price', 'tags', 'details', 'attachment']
+        fields = ['title', 'state', 'deadline', 'target_price', 'tags', 'details', 'category' , 'attachment']
 
         widgets = {
             'title': forms.TextInput(attrs={
@@ -78,6 +78,10 @@ class ProjectForm(forms.ModelForm):
             'details': forms.Textarea(attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter the details',
+            }),
+            'category': forms.Select(attrs={
+                'class': 'form-control bg-light',
+                'style': 'border-radius: 10px; border: 1px solid #586F6B; padding: 10px;'
             }),
             'attachment': forms.ClearableFileInput(attrs={
                 'class': 'form-control',

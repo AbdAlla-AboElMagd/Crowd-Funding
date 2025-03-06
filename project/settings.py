@@ -144,7 +144,7 @@ EMAIL_HOST ='smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'drnasser.khairy@gmail.com'
-EMAIL_HOST_PASSWORD = 'rpfm orjq ucqf gjrq' #هنا هتحط الباسورد اللي هيديهولك الجيميل علشان تستخدمه
+EMAIL_HOST_PASSWORD = 'rpfm orjq ucqf gjrq'
 # DEFAULT_FROM_EMAIL = 'drnasser.khairy@gmail.com'
 
 

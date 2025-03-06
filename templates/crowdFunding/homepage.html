@@ -27,6 +27,7 @@
     <div class="carousel-inner">
       {% for project in highest_rating %}
       <div class="carousel-item {% if forloop.first %} active {% endif %}">
+        {% if project.attachment %}
         <img
           src="{{ project.attachment.url }}"
           alt="{{ project.attachment.name }}"
@@ -38,6 +39,19 @@
             aspect-ratio: 16/9;
           "
         />
+        {% else %}
+        <img
+          src="{% static 'images/img.jpg' %}"
+          alt="Project has no Image"
+          class="d-block w-100"
+          style="
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            aspect-ratio: 16/9;
+          "
+        />
+        {% endif %}
         <div
           class="carousel-caption d-none d-md-block"
           style="background-color: rgba(0, 0, 0, 0.5)"
@@ -100,6 +114,18 @@
               aspect-ratio: 16/9;
             "
           />
+          {% else %}
+          <img
+            src="{% static 'images/img.jpg' %}"
+            alt="Project has no Image"
+            class="d-block w-100"
+            style="
+              width: 100%;
+              height: auto;
+              object-fit: cover;
+              aspect-ratio: 16/9;
+            "
+          />
           {% endif %}
           <div class="card-body">
             <h5 class="card-title">{{ project.project.title }}</h5>
@@ -133,6 +159,19 @@
           <img
             src="{{ project.attachment.url }}"
             alt="{{ project.attachment.name }}"
+            class="d-block w-100"
+            style="
+              width: 100%;
+              height: auto;
+              object-fit: cover;
+              aspect-ratio: 16/9;
+            "
+          />
+          {% else %}
+          <img
+            src="{% static 'images/img.jpg' %}"
+            alt="Project has no Image"
+            class="d-block w-100"
             style="
               width: 100%;
               height: auto;
@@ -187,6 +226,5 @@
     {% endif %}
   </div>
   <!-- End Of Categories -->
- 
 </div>
 {% endblock content %}

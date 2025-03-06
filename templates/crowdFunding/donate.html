@@ -1,10 +1,7 @@
-{% extends 'home.html' %}
-
-{% block content %}
+{% extends 'crowdFunding/home.html' %} {% block content %}
 <h2>Donate to {{ project.title }}</h2>
 <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Donate</button>
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">Donate</button>
 </form>
 {% endblock %}

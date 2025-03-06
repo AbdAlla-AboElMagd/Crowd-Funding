@@ -33,6 +33,13 @@
   </div>
 
   <div class="mb-3">
+    <label for="id_state" class="form-label">Category</label>
+    {{ project_form.category }} {% if project_form.category.errors %}
+    <div class="text-danger">{{ project_form.category.errors|striptags }}</div>
+    {% endif %}
+  </div>
+
+  <div class="mb-3">
     <label for="id_deadline" class="form-label">Deadline</label>
     {{ project_form.deadline }} {% if project_form.deadline.errors %}
     <div class="text-danger">{{ project_form.deadline.errors|striptags }}</div>

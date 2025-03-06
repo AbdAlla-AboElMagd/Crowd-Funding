@@ -75,11 +75,13 @@ def project_details(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     comments = project.comments.all().order_by('-created_at')  
     form = CommentForm()
+    username = request.session.get("username" , None)
     
     return render(request, 'crowdFunding/project_details.html', {
         'project': project,
         'comments': comments,
-        'form': form
+        'form': form,
+        "username":username
     })
 
 
@@ -89,17 +91,19 @@ def add_comment(request, project_id):
     project = get_object_or_404(Project, id=project_id)
 
     if request.method == "POST":
-            if request.session.get('username'):
-                username = request.session.get('username')
-                form = CommentForm(request.POST)
-                if form.is_valid():
-                    comment = form.save(commit=False)
-                    comment.user_id = request.user  # Ensure foreign key matches the model
-                    comment.project_id = project
-                    comment.save()
-                    return redirect('project_details', project_id=project.id)
-            else:
-                return redirect('login')
+        if request.session.get('username'):
+            username = request.session.get('username')
+            form = CommentForm(request.POST)
+            print("Test COmment")
+            if form.is_valid():
+                comment = form.save(commit=False)
+                user = User.objects.get(username=username)
+                comment.user_id = user 
+                comment.project_id = project
+                comment.save()
+                return redirect('project_details', project_id=project.id)
+        else:
+            return redirect('login')
 
     else:
         form = CommentForm()
@@ -505,6 +509,7 @@ def searchProject(request , search_text = None):
 
 def homepage(request):
     highest_rating = Project.objects.filter(state = "Open").order_by("-total_rating")[:5]
+    print("Test" ,highest_rating)
     selected_projects = SelectedProject.objects.all()
     latest_projects = Project.objects.all().order_by("-created_at")[:5]
     categories = Category.objects.all()
@@ -543,6 +548,6 @@ class DonateView(View):
             # تحديث target_price بحيث ينقص بالمبلغ المتبرع به
             Project.objects.filter(id=project_id).update(target_price=F('target_price') - donation.amount)
         
-            return redirect('project_detail', project_id=project.id)  # رجوع لصفحة المشروع بعد التبرع
+            return redirect('project', project_id=project.id) 
         return render(request, 'crowdFunding/donate.html', {'form': form, 'project': project})
 
