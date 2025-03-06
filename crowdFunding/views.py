@@ -10,7 +10,7 @@ from django.db import models
 from .models import Donation, Project, ProjectImage
 from .forms import ProjectForm, ProjectImageForm, UserProfileForm
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login,logout 
 from django.shortcuts import render, redirect
 from crowdFunding.forms import CustomUserCreationForm
 from django.contrib import messages
