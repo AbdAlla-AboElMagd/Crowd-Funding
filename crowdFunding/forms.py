@@ -17,6 +17,7 @@ class CustomUserCreationForm(UserCreationForm):
             'username': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
+
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 
@@ -81,8 +82,6 @@ class ProjectImageForm(forms.ModelForm):
     class Meta:
         model = ProjectImage
         fields = ['images']
-
-
 
 
 class userForm(forms.Form):
