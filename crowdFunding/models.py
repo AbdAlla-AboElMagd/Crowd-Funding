@@ -36,7 +36,7 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)
-    profile_pic = models.ImageField(upload_to='atachments/', blank=True, null=True)
+    profile_pic = models.ImageField(blank=True, null=True)
     phone = models.CharField(
         max_length=11,
         validators=[egypt_phone_regex],
@@ -178,3 +178,12 @@ class SelectedProject(models.Model):
     def __str__(self):
         return f"{self.id}: {self.project}"
     
+class Donation(models.Model):
+    id = models.AutoField(primary_key=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(1)])
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='donations')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='donations')
+
+    def __str__(self):
+        return f"Donation of {self.amount} by {self.user.username} to {self.project.title}"

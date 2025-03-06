@@ -4,9 +4,9 @@ from django.views.generic import ListView
 
 from crowdFunding.forms import ReportCommentModelForm, ReportProjectModelForm
 from crowdFunding.models import Comment, Project, ReportProject, SelectedProject , User , ReportComment , Category , Tag
-
+from django.contrib.auth.decorators import login_required
 from django.db import models
-from .models import Project, ProjectImage
+from .models import Donation, Project, ProjectImage
 from .forms import ProjectForm, ProjectImageForm
 
 from django.contrib.auth import authenticate, login
@@ -34,13 +34,12 @@ def about(request):
     else:
         return redirect(custom_login)
 
-
 def signup(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST, request.FILES)  # أضف request.FILES
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False  # لسه مش مفعل
+            user.is_active = False
             user.save()
 
             # إعدادات الإيميل
@@ -63,6 +62,75 @@ def signup(request):
         form = CustomUserCreationForm()
     return render(request, 'crowdFunding/signup.html', {'user_creation_form': form})
 
+# def signup(request):
+#     if request.method == 'POST':
+#         form = CustomUserCreationForm(request.POST)
+#         if form.is_valid():
+#             user = form.save(commit=False)
+#             user.is_active = False  # لسه مش مفعل
+#             user.save()
+
+#             # إعدادات الإيميل
+#             current_site = get_current_site(request)
+#             mail_subject = 'فعل حسابك الآن'
+#             uid = urlsafe_base64_encode(force_bytes(user.pk))
+#             token = account_activation_token.make_token(user)
+#             activation_link = reverse('activate', kwargs={'uidb64': uid, 'token': token})
+#             activation_url = f"http://{current_site.domain}{activation_link}"
+            
+#             message = render_to_string('crowdFunding/activation_email.html', {
+#                 'user': user,
+#                 'activation_url': activation_url
+#             })
+#             send_mail(mail_subject, message, 'drnasser.khairy@gmail.com', [user.email])
+
+#             messages.success(request, 'تم التسجيل! تحقق من بريدك الإلكتروني لتفعيل حسابك.')
+#             return redirect('login')
+#     else:
+#         form = CustomUserCreationForm()
+#     return render(request, 'crowdFunding/signup.html', {'user_creation_form': form})
+
+
+@login_required
+def profile(request):
+    # عرض المشاريع الخاصة باليوزر
+    user_projects = Project.objects.filter(user=request.user)
+    user_donations = Donation.objects.filter(user=request.user)  # لو عندك موديل اسمه Donation
+
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'تم تحديث بروفايلك بنجاح!')
+            return redirect('profile')
+    else:
+        form = CustomUserCreationForm(instance=request.user)
+
+    context = {
+        'form': form,
+        'user': request.user,
+        'projects': user_projects,
+        'donations': user_donations,
+    }
+    return render(request, 'crowdFunding/profile.html', context)
+
+from django.contrib.auth import logout
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        user = authenticate(username=request.user.username, password=password)
+        if user:
+            user.delete()
+            logout(request)
+            messages.success(request, 'تم حذف حسابك بنجاح!')
+            return redirect('home')
+        else:
+            messages.error(request, 'كلمة المرور غير صحيحة!')
+            return redirect('profile')
+
+
 from django.contrib.auth import get_user_model
 
 def activate(request, uidb64, token):
@@ -82,18 +150,6 @@ def activate(request, uidb64, token):
         return redirect('home')
 
 
-# def signup(request):
-#     if request.method == 'POST':
-#         form = CustomUserCreationForm(request.POST)
-    
-#         if form.is_valid():
-#             form.save()
-           
-#             messages.success(request, 'تم التسجيل بنجاح! سجل دخولك الآن.')  
-#             return redirect(custom_login)  
-#     else:
-#         form = CustomUserCreationForm()
-#     return render(request, 'crowdFunding/signup.html', {'user_creation_form': form})
 
 def custom_login(request):
     if request.method == 'POST':
@@ -115,11 +171,6 @@ def custom_logout(request):
         pass
     return redirect(custom_login)
     
-    
-  
-
-
-
 
 
 def show_project(request):

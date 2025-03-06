@@ -6,7 +6,7 @@ from crowdFunding.models import User, ReportProject, ReportComment
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('email','username', 'first_name', 'last_name', 'phone', 'password1', 'password2')
+        fields = ('email','username', 'first_name', 'last_name', 'phone', 'password1', 'password2', 'profile_pic')
         widgets = {
             'password1': forms.PasswordInput(attrs={'class': 'form-control'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -16,6 +16,10 @@ class CustomUserCreationForm(UserCreationForm):
             'profile_pic': forms.FileInput(attrs={'class': 'form-control'}),
             'username': forms.TextInput(attrs={'class': 'form-control'}),
         }
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        exclude = ['email']
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True

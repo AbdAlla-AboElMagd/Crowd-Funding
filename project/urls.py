@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.shortcuts import render
 from django.urls import path
 from django.contrib.auth import views as auth_views  
-from crowdFunding.views import about, custom_login, custom_logout, home, signup ,activate
+from crowdFunding.views import about, custom_login, custom_logout, delete_account, home, profile, signup ,activate
 from django.conf.urls import handler404 
 from crowdFunding.views import about, home, signup
 from crowdFunding.views import CreateReportComment, CreateReportProject, DeleteReportComment, ListReportComment, ListReportProject, UpdateReportComment, UpdateReportProject, DeleteReportProject , about, add_project, home, homepage, projectInCategory, searchProject, show_project
@@ -32,7 +32,8 @@ def custom_page_not_found(request, exception):
 handler404 = custom_page_not_found
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    path('profile/',profile, name='profile'),
+    path('delete_account/',delete_account, name='delete_account'),
     path('signup/', signup, name='signup'),  
     # path('login/', auth_views.LoginView.as_view(template_name='crowdFunding/login.html'), name='login'),
      path('login/', custom_login, name='login'), 

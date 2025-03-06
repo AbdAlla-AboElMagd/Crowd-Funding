@@ -45,6 +45,7 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'ListReportComment' %}">Comments Reports</a>
           </li>
+           <li><a class="nav-link" href="{% url 'logout' %}" class="text-light mb-2 text-decoration-none">Logout</a></li>
         </ul>
         <form class="d-flex" role="search" method="GET" action="{% url 'searchProject' %}">
           <input class="form-control me-2" id="search" name="search" type="search" placeholder="Search"
@@ -89,6 +90,8 @@
             <li><a href="#" class="text-light mb-2 text-decoration-none">Projects</a></li>
             <li><a href="#" class="text-light mb-2 text-decoration-none">Contact</a></li>
             <li><a href="#" class="text-light mb-2 text-decoration-none">FAQ</a></li>
+           <li><a href="{% url 'logout' %}" class="text-light mb-2 text-decoration-none">Logout</a></li>
+
 
 
 
