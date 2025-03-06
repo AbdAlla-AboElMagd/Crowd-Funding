@@ -1,0 +1,53 @@
+{% extends 'crowdFunding/home.html' %}
+{% block content %}
+
+<div class="container">
+    <h2>{{ project.title }}</h2>
+    <p>{{ project.details }}</p>
+
+    <!-- Comment Form -->
+    <div class="card my-4">
+        <div class="card-body">
+            <h5 class="card-title">Add a Comment</h5>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <h3>Comments</h3>
+    {% for comment in comments %}
+        <div class="card my-3">
+            <div class="card-body">
+                <p class="card-text"><strong>{{ comment.user.username }}</strong>: {{ comment.text }}</p>
+                <a href="{% url 'report_comment' comment.id %}" class="btn btn-warning">Report Comment</a>
+                <small class="text-muted">{{ comment.created_at }}</small>
+                
+                <!-- Update & Delete Buttons -->
+                {% if comment.user == request.user %}
+                    <a href="{% url 'update_comment' comment.id %}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="{% url 'delete_comment' comment.id %}" class="btn btn-sm btn-danger">Delete</a>
+                {% endif %}
+                
+                <!-- Nested Replies -->
+                {% for reply in comment.replies.all %}
+                    <div class="card mt-2 ml-4">
+                        <div class="card-body">
+                            <p class="card-text"><strong>{{ reply.user.username }}</strong>: {{ reply.text }}</p>
+                            <small class="text-muted">{{ reply.created_at }}</small>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
+    <a href="{% url 'report_project' project.id %}" class="btn btn-danger">Report Project</a>
+    <a href="{% url 'donate_project' project.id %}" class="btn btn-success">Donate Now</a>
+</div>
+
+{% endblock %}

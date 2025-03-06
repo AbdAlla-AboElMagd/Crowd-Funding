@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from crowdFunding.views import CreateReportComment, CreateReportProject, DeleteReportComment, ListReportComment, ListReportProject, UpdateReportComment, UpdateReportProject, DeleteReportProject , about, add_project, home, homepage, projectInCategory, searchProject, show_project
+from crowdFunding.views import CreateReportComment, CreateReportProject, DeleteReportComment, DonateView, ListReportComment, ListReportProject, UpdateReportComment, UpdateReportProject, DeleteReportProject , about, add_comment, add_project, delete_comment, home, homepage, project_details, projectInCategory, searchProject, show_project, update_comment
 from project import settings
 from django.conf.urls.static import static
 
@@ -26,8 +26,15 @@ urlpatterns = [
     path('' , home , name ='home'),
     # path('home/' , home , name='home'),
     path('about/' , about , name='about'),
-     path('project/' , show_project , name='project'),
+    path('project/' , show_project , name='project'),
     path('add_project/' , add_project , name='add_project'),
+    path('project/<int:project_id>/', project_details, name='project'),
+    path('project/<int:project_id>/add_comment/', add_comment, name='add_comment'),
+    path('comment/delete/<int:comment_id>/', delete_comment, name='delete_comment'),
+    path('comment/update/<int:comment_id>/', update_comment, name='update_comment'),
+    path('project/<int:project_id>/donate/', DonateView.as_view(), name='donate_project'),
+    path('report_project/<int:project_id>/', CreateReportProject.as_view(), name='report_project'),
+    path('report_comment/<int:comment_id>/', CreateReportComment.as_view(), name='report_comment'),
     # Report Project
     path('reportProject/<int:project_id>' , CreateReportProject.as_view() , name='reportProject'),
     path('updateReportProject/<int:report_id>' , UpdateReportProject.as_view() , name='UpdateReportProject'),

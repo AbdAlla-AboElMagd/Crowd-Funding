@@ -80,10 +80,6 @@ class User(AbstractUser):
 
 
 
- 
-
- 
-
 class Project(models.Model):
 
     class StateChoices(models.TextChoices):
@@ -102,12 +98,12 @@ class Project(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     target_price = models.IntegerField()
 
-   
+
     user = models.ForeignKey(User , on_delete=models.PROTECT, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     total_rating = models.FloatField(validators=[MinValueValidator(0,0) , MaxValueValidator(5.0)] , default=0.0)
     total_user_rated = models.IntegerField(default=0)
-   
+
 
     def __str__(self):
         return self.title
@@ -200,3 +196,18 @@ class SelectedProject(models.Model):
     def __str__(self):
         return f"{self.id}: {self.project}"
     
+
+from django.db import models
+from django.core.validators import MinValueValidator
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+class Donation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(1)])
+    donated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} donated {self.amount} to {self.project}"

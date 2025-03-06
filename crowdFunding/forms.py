@@ -1,5 +1,5 @@
 from django import forms
-from .models import Project, ProjectImage, Tag
+from .models import Project, ProjectImage, Tag, Comment
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -90,5 +90,24 @@ class ReportCommentModelForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Report Title', 'required': True}),
             'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter Report Description', 'required': True}),
+        }
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Write a comment...'})
+        }
+
+from django import forms
+from .models import Donation
+
+class DonationForm(forms.ModelForm):
+    class Meta:
+        model = Donation
+        fields = ['amount']
+        widgets = {
+            'amount': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter donation amount'})
         }
 
