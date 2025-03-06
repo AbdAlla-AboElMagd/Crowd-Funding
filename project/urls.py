@@ -31,6 +31,9 @@ def custom_page_not_found(request, exception):
 
 handler404 = custom_page_not_found
 urlpatterns = [
+    # path('' , home , name ='home'),
+    path('' , homepage , name ='home'),
+
     path('admin/', admin.site.urls),
     path('profile/',profile, name='profile'),
     path('delete_account/',delete_account, name='delete_account'),
@@ -39,8 +42,6 @@ urlpatterns = [
      path('login/', custom_login, name='login'), 
     path('logout/', custom_logout, name='logout'),  
      path('activate/<uidb64>/<token>/', activate, name='activate'),
-
-    path('' , home , name ='home'),
     # path('home/' , home , name='home'),
     path('about/' , about , name='about'),
      path('project/' , show_project , name='project'),

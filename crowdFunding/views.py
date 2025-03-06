@@ -30,7 +30,7 @@ def home(request):
     username = request.session.get("username" , None)
     context={"username":username}
     print(username)
-    return render(request=request , template_name='tasks/home.html' , context=context)
+    return render(request=request , template_name='crowdFunding/home.html' , context=context)
 
 def about(request):
 
