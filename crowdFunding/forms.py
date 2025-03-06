@@ -19,7 +19,13 @@ class CustomUserCreationForm(UserCreationForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        exclude = ['email']
+        fields = ['username', 'first_name', 'last_name', 'phone', 'Birthdate', 'country', 'facebook_profile', 'profile_pic']
+    
+    # جعل الفيلدز اختيارية
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True

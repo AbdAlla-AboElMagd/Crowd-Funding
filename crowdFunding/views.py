@@ -90,6 +90,17 @@ def signup(request):
 #         form = CustomUserCreationForm()
 #     return render(request, 'crowdFunding/signup.html', {'user_creation_form': form})
 
+def update_profile(request):
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=request.user, partial=True)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "تم تحديث بياناتك بنجاح!")
+        else:
+            messages.error(request, "في خطأ في البيانات!")
+    else:
+        form = UserProfileForm(instance=request.user)
+    return render(request, 'crowdFunding/profile.html', {'form': form})
 
 @login_required
 def profile(request):
@@ -159,6 +170,7 @@ def custom_login(request):
         if user is not None:
             login(request, user)
             request.session['username'] = user.username  
+            
             return redirect('home')
         else:
             messages.error(request, "username or Password Not Correct")
@@ -167,6 +179,7 @@ def custom_login(request):
 def custom_logout(request):
     try:
         del request.session['username']
+        logout(request)
     except:
         pass
     return redirect(custom_login)

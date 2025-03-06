@@ -148,7 +148,7 @@ EMAIL_HOST_PASSWORD = 'rpfm orjq ucqf gjrq' #هنا هتحط الباسورد ا
 # DEFAULT_FROM_EMAIL = 'drnasser.khairy@gmail.com'
 
 
-
+LOGIN_URL = '/login/'
 
 
 # Media Path
