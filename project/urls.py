@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.shortcuts import render
 from django.urls import path
 from django.contrib.auth import views as auth_views  
-from crowdFunding.views import about, custom_login, custom_logout, delete_account, home, profile, signup ,activate
+from crowdFunding.views import about, custom_login, custom_logout, delete_account, home, profile, signup ,activate, project_details, add_comment, delete_comment, update_comment, DonateView
 from django.conf.urls import handler404 
 from crowdFunding.views import about, home, signup
 from crowdFunding.views import CreateReportComment, CreateReportProject, DeleteReportComment, ListReportComment, ListReportProject, UpdateReportComment, UpdateReportProject, DeleteReportProject , about, add_project, home, homepage, projectInCategory, searchProject, show_project

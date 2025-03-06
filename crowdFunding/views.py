@@ -3,7 +3,7 @@ from django.views.generic import ListView
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.core.mail import send_mail
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -16,7 +16,7 @@ from crowdFunding.models import (
     ReportComment, Category, Tag, Donation, ProjectImage
 )
 from crowdFunding.forms import (
-    ReportCommentModelForm, ReportProjectModelForm, CustomUserCreationForm, 
+    CommentForm, DonationForm, ReportCommentModelForm, ReportProjectModelForm, CustomUserCreationForm, 
     ProjectForm, ProjectImageForm, UserProfileForm
 )
 from .tokens import account_activation_token
@@ -71,7 +71,67 @@ def signup(request):
     return render(request, 'crowdFunding/signup.html', {'user_creation_form': form})
 
 
+def project_details(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    comments = project.comments.all().order_by('-created_at')  
+    form = CommentForm()
+    
+    return render(request, 'crowdFunding/project_details.html', {
+        'project': project,
+        'comments': comments,
+        'form': form
+    })
 
+
+@login_required
+def add_comment(request, project_id):
+    """ Add a new comment and redirect to the project details page """
+    project = get_object_or_404(Project, id=project_id)
+
+    if request.method == "POST":
+            if request.session.get('username'):
+                username = request.session.get('username')
+                form = CommentForm(request.POST)
+                if form.is_valid():
+                    comment = form.save(commit=False)
+                    comment.user_id = request.user  # Ensure foreign key matches the model
+                    comment.project_id = project
+                    comment.save()
+                    return redirect('project_details', project_id=project.id)
+            else:
+                return redirect('login')
+
+    else:
+        form = CommentForm()
+
+    return render(request, 'add_comment.html', {'form': form, 'project': project})
+
+
+@login_required
+def delete_comment(request, comment_id):
+    """ Delete a comment (Only if the user owns it) and redirect to project details """
+    comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+    project_id = comment.project_id.id  # Get project ID before deleting the comment
+    comment.delete()
+    return redirect('project_details', project_id=project_id)
+
+
+@login_required
+def update_comment(request, comment_id):
+    """ Edit a comment and redirect to project details """
+    comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+    project_id = comment.project_id.id
+
+    if request.method == "POST":
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect('project_details', project_id=project_id)
+
+    else:
+        form = CommentForm(instance=comment)
+
+    return render(request, 'edit_comment.html', {'form': form, 'comment': comment})
 
 def delete_account(request):
     if request.method == 'POST':
@@ -482,7 +542,7 @@ class DonateView(View):
 
             # تحديث target_price بحيث ينقص بالمبلغ المتبرع به
             Project.objects.filter(id=project_id).update(target_price=F('target_price') - donation.amount)
-
+        
             return redirect('project_detail', project_id=project.id)  # رجوع لصفحة المشروع بعد التبرع
         return render(request, 'crowdFunding/donate.html', {'form': form, 'project': project})
 

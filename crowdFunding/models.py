@@ -110,7 +110,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user_id = models.ForeignKey(User , on_delete=models.CASCADE)
-    project_id = models.ForeignKey(Project , on_delete=models.CASCADE)
+    project_id = models.ForeignKey(Project , on_delete=models.CASCADE, related_name='comments')
     parent_id = models.ForeignKey('self' , on_delete=models.CASCADE , null=True , blank=True)
     is_parent = models.BooleanField(default=False)
     likes = models.IntegerField(default=0)
