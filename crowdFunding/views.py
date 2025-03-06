@@ -186,7 +186,10 @@ def add_project(request):
         if project_form.is_valid() and image_form.is_valid():
             # Save the project
             project = project_form.save(commit=False)
-            project.user = request.user 
+            # project.user = request.user
+            cur_user=request.session.get('email')
+            user = User.objects.get(email=cur_user)
+            project.user = user   
             project.save()
             project_form.save_m2m()  
 
