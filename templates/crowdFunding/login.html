@@ -26,20 +26,20 @@
 <body>
 
 <div class="card p-4" style="max-width: 400px; width: 100%;">
-    <h4 class="text-center mb-4">تسجيل الدخول</h4>
+    <h4 class="text-center mb-4">Login</h4>
     <form method="POST">
         {% csrf_token %}
         <div class="mb-3">
-            <label for="email" class="form-label">الإيميل</label>
-            <input type="email" name="email" id="email" class="form-control" placeholder="أدخل الإيميل" required>
+            <label for="username" class="form-label">Username</label>
+            <input type="text" name="username" id="username" class="form-control" placeholder="Enter Your Name" required>
         </div>
         <div class="mb-3">
-            <label for="password" class="form-label">كلمة المرور</label>
-            <input type="password" name="password" id="password" class="form-control" placeholder="أدخل كلمة المرور" required>
+            <label for="password" class="form-label">Password </label>
+            <input type="password" name="password" id="password" class="form-control" placeholder="Enter your Password"required>
         </div>
-        <button type="submit" class="btn btn-primary w-100">تسجيل الدخول</button>
+        <button type="submit" class="btn btn-primary w-100"> Login</button>
         <div class="text-center mt-3">
-            <p>ليس لديك حساب <a href="{% url 'signup' %}">سجل الان</a></p>
+            <p>register now<a href="{% url 'signup' %}"> sign up</a></p>
         </div>
     </form>
 

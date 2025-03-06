@@ -22,14 +22,14 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.urls import reverse
 def home(request):
-    if request.session.get('email'):
+    if request.session.get('username'):
         return render(request=request, template_name='crowdFunding/home.html')
     else:
         return redirect(custom_login)
 
 def about(request):
 
-    if request.session.get('email'):
+    if request.session.get('username'):
         return render(request=request, template_name='crowdFunding/about.html')
     else:
         return redirect(custom_login)
@@ -97,76 +97,26 @@ def activate(request, uidb64, token):
 
 def custom_login(request):
     if request.method == 'POST':
-        email = request.POST['email']
+        username = request.POST['username']
         password = request.POST['password']
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            request.session['email'] = user.email  
+            request.session['username'] = user.username  
             return redirect('home')
         else:
-            messages.error(request, 'البريد الإلكتروني أو كلمة المرور غير صحيحة!')
+            messages.error(request, "username or Password Not Correct")
 
     return render(request, 'crowdFunding/login.html')
 def custom_logout(request):
     try:
-        del request.session['email']
+        del request.session['username']
     except:
         pass
     return redirect(custom_login)
     
     
-    
-    
-# def new(request):
-#     form = UserForm()
-#     if request.method == 'POST':
-#         form = UserForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponseRedirect('home/')
-#     return render(request=request, template_name='crowdFunding/register.html', context={'user_form': form})
-    
-# def signup(request):
-#     user_creation_form = UserCreationForm()
-#     if request.method == 'POST':
-#         user_creation_form = UserCreationForm(request.POST)
-#         if user_creation_form.is_valid():
-#             user_creation_form.save()
-#             user_name=user_creation_form.cleaned_data.get('username')
-#             password=user_creation_form.cleaned_data.get('password1')
-#             user=authenticate(username=user_name, password=password)
-#             login(request, user)
-#             return HttpResponseRedirect('home/')
-#     context={
-#             'user_creation_form': user_creation_form,
-#     }
-#     return render(request=request, template_name='crowdFunding/signup.html', context=context)
-        
-# def signup(request):
-#     user_creation_form = CustomUserCreationForm()  # استخدام الفورم الجديد
-#     if request.method == 'POST':
-#         user_creation_form = CustomUserCreationForm(request.POST)
-#         if user_creation_form.is_valid():
-#             user = user_creation_form.save(commit=False)  # احفظ من غير ما تعمله save نهائي
-#             user.is_active = True  # خليه نشط تلقائي
-#             user.save()  # احفظ اليوزر
-#             email = user_creation_form.cleaned_data.get('email')
-#             password = user_creation_form.cleaned_data.get('password1')
-#             user = authenticate(email=email, password=password)  # التحقق بالإيميل والباسورد
-#             if user is not None:
-#                 login(request, user)
-#                 return HttpResponseRedirect('home/')
-#     context = {
-#         'user_creation_form': user_creation_form,
-#     }
-#     return render(request=request, template_name='crowdFunding/signup.html', context=context)
-
-
-
-
-
-
+  
 
 
 
@@ -176,8 +126,6 @@ def show_project(request):
     projects = Project.objects.all()
     return render(request, 'crowdFunding/project.html', {'projects': projects})
 
-
-
 def add_project(request):
     if request.method == 'POST':
         project_form = ProjectForm(request.POST, request.FILES)
@@ -186,10 +134,7 @@ def add_project(request):
         if project_form.is_valid() and image_form.is_valid():
             # Save the project
             project = project_form.save(commit=False)
-            # project.user = request.user
-            cur_user=request.session.get('email')
-            user = User.objects.get(email=cur_user)
-            project.user = user   
+            project.user = request.user 
             project.save()
             project_form.save_m2m()  
 
