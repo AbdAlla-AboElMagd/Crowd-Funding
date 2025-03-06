@@ -27,57 +27,35 @@ class Category(models.Model):
 
 
 class User(AbstractUser):
+    username =models.CharField(max_length=255, unique=True)
     id = models.AutoField(primary_key=True)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, unique=False)
+    last_name = models.CharField(max_length=255, unique=False)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)
-    profile_pic = models.ImageField(upload_to='atachments/' , blank=True , null=True)
+    profile_pic = models.ImageField(upload_to='atachments/', blank=True, null=True)
     phone = models.CharField(
         max_length=11,
         validators=[egypt_phone_regex],
-        verbose_name="Must be Egyption Number"
+        verbose_name="Phone"
     )
     is_staff = models.BooleanField(default=False)
-    Birthdate= models.DateField(null=True , blank=True)
-    facebook_profile = models.URLField(max_length=255 , null=True , blank=True)
-    country = models.CharField(max_length= 255 , null=True , blank=True)
+    Birthdate = models.DateField(null=True, blank=True)
+    facebook_profile = models.URLField(max_length=255, null=True, blank=True)
+    country = models.CharField(max_length=255, null=True, blank=True)
 
-    groups = models.ManyToManyField(Group, related_name='crowdfunding_user_groups' , null=True , blank=True)
-    user_permissions = models.ManyToManyField(Permission, related_name='crowdfunding_user_permissions', null=True , blank=True)
+    groups = models.ManyToManyField(Group, related_name='crowdfunding_user_groups',null=True, blank=True)
+    user_permissions = models.ManyToManyField(Permission, related_name='crowdfunding_user_permissions',null=True, blank=True)
+
+
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ['email','first_name', 'last_name', 'phone']
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}" 
-
-
-# class CustomUser(models.Model):
-#     id = models.AutoField(primary_key=True)
-#     first_name = models.CharField(max_length=255)
-#     last_name = models.CharField(max_length=255)
-#     email = models.EmailField(unique=True)
-#     password = models.CharField(max_length=255)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
-#     is_active = models.BooleanField(default=False)
-#     profile_pic = models.ImageField(upload_to='atachments/' , blank=True , null=True)
-#     phone = models.CharField(
-#         max_length=11,
-#         validators=[egypt_phone_regex],
-#         verbose_name="Must be Egyption Number"
-#     )
-#     isAdmin = models.BooleanField(default=False)
-#     Birthdate= models.DateField(null=True , blank=True)
-#     facebook_profile = models.URLField(max_length=255 , null=True , blank=True)
-#     country = models.CharField(max_length= 255 , null=True , blank=True)
-
-#     def __str__(self):
-#         return f"{self.first_name} {self.last_name}" 
-#
-# projects
-
+        return f"{self.first_name} {self.last_name}"
 
 
  

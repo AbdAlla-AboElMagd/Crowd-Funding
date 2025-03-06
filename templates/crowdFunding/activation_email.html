@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفعيل حسابك</title>
+</head>
+<body>
+    <h2>مرحبًا {{ user.first_name }}!</h2>
+    <p>شكرًا لتسجيلك لدينا. لتفعيل حسابك، اضغط على الرابط التالي:</p>
+    <a href="{{ activation_url }}">تفعيل حسابي</a>
+    <p>إذا لم تطلب هذا الحساب، يمكنك تجاهل هذه الرسالة.</p>
+</body>
+</html>

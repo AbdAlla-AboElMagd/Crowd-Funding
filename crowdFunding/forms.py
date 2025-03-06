@@ -1,5 +1,21 @@
 from django import forms
 from .models import Project, ProjectImage, Tag
+from django.contrib.auth.forms import UserCreationForm
+from crowdFunding.models import User, ReportProject, ReportComment
+# فورم لإنشاء مستخدم جديد
+class CustomUserCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('email','username', 'first_name', 'last_name', 'phone', 'password1', 'password2')
+        widgets = {
+            'password1': forms.PasswordInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'profile_pic': forms.FileInput(attrs={'class': 'form-control'}),
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -67,7 +83,7 @@ class ProjectImageForm(forms.ModelForm):
         fields = ['images']
 
 
-from crowdFunding.models import ReportProject , ReportComment
+
 
 class userForm(forms.Form):
     username = forms.CharField(max_length=25 , widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Username'}) ) 
@@ -91,4 +107,3 @@ class ReportCommentModelForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Report Title', 'required': True}),
             'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter Report Description', 'required': True}),
         }
-
