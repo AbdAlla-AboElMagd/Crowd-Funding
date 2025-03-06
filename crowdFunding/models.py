@@ -62,6 +62,7 @@ class User(AbstractUser):
 
  
 
+
 class Project(models.Model):
 
     class StateChoices(models.TextChoices):
