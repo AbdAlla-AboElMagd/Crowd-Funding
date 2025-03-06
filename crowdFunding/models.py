@@ -58,11 +58,6 @@ class User(AbstractUser):
         return f"{self.first_name} {self.last_name}"
 
 
- 
-
- 
-
-
 class Project(models.Model):
 
     class StateChoices(models.TextChoices):
@@ -88,7 +83,7 @@ class Project(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     total_rating = models.FloatField(validators=[MinValueValidator(0,0) , MaxValueValidator(5.0)] , default=0.0)
     total_user_rated = models.IntegerField(default=0)
-   
+
 
     def __str__(self):
         return self.title
@@ -115,7 +110,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user_id = models.ForeignKey(User , on_delete=models.CASCADE)
-    project_id = models.ForeignKey(Project , on_delete=models.CASCADE)
+    project_id = models.ForeignKey(Project , on_delete=models.CASCADE, related_name='comments')
     parent_id = models.ForeignKey('self' , on_delete=models.CASCADE , null=True , blank=True)
     is_parent = models.BooleanField(default=False)
     likes = models.IntegerField(default=0)

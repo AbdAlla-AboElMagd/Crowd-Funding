@@ -1,0 +1,17 @@
+{% extends 'home.html' %}
+{% block content %}
+
+<div class="container">
+    <h2>Add a Comment</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="text" class="form-label">Comment:</label>
+            {{ form.text }}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="{% url 'project_details' project.id %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+{% endblock %}
